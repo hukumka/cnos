@@ -1,0 +1,126 @@
+kernel.c:1:6: предупреждение: return type of «main» is not «int» [-Wmain]
+ld:linker.ld:5: syntax error
+16065+0 записей получено
+16065+0 записей отправлено
+скопировано 8225280 байт (8,2 MB), 0,0723713 c, 114 MB/c
+Устройство не содержит ни верной таблицы разделов DOS, ни метки диска Sun, SGI или OSF
+Building a new DOS disklabel with disk identifier 0xeb6e8b56.
+Changes will remain in memory only, until you decide to write them.
+After that, of course, the previous content won't be recoverable.
+
+Предупреждение: неверный флаг 0x0000 таблицы разделов 4 будет исправлен записью
+16065+0 записей получено
+16065+0 записей отправлено
+скопировано 8225280 байт (8,2 MB), 0,0335299 c, 245 MB/c
+Устройство не содержит ни верной таблицы разделов DOS, ни метки диска Sun, SGI или OSF
+Building a new DOS disklabel with disk identifier 0x54154824.
+Changes will remain in memory only, until you decide to write them.
+After that, of course, the previous content won't be recoverable.
+
+Предупреждение: неверный флаг 0x0000 таблицы разделов 4 будет исправлен записью
+16065+0 записей получено
+16065+0 записей отправлено
+скопировано 8225280 байт (8,2 MB), 0,0378658 c, 217 MB/c
+Устройство не содержит ни верной таблицы разделов DOS, ни метки диска Sun, SGI или OSF
+Building a new DOS disklabel with disk identifier 0xb4043e4c.
+Changes will remain in memory only, until you decide to write them.
+After that, of course, the previous content won't be recoverable.
+
+Предупреждение: неверный флаг 0x0000 таблицы разделов 4 будет исправлен записью
+16065+0 записей получено
+16065+0 записей отправлено
+скопировано 8225280 байт (8,2 MB), 0,0373043 c, 220 MB/c
+Устройство не содержит ни верной таблицы разделов DOS, ни метки диска Sun, SGI или OSF
+Building a new DOS disklabel with disk identifier 0x66586e05.
+Changes will remain in memory only, until you decide to write them.
+After that, of course, the previous content won't be recoverable.
+
+Предупреждение: неверный флаг 0x0000 таблицы разделов 4 будет исправлен записью
+boot.s: Assembler messages:
+boot.s:1: Error: no such instruction: `section ._mbHeader'
+16065+0 записей получено
+16065+0 записей отправлено
+скопировано 8225280 байт (8,2 MB), 0,0763905 c, 108 MB/c
+Устройство не содержит ни верной таблицы разделов DOS, ни метки диска Sun, SGI или OSF
+Building a new DOS disklabel with disk identifier 0x38ff12e8.
+Changes will remain in memory only, until you decide to write them.
+After that, of course, the previous content won't be recoverable.
+
+Предупреждение: неверный флаг 0x0000 таблицы разделов 4 будет исправлен записью
+kernel.c:1:6: предупреждение: return type of «main» is not «int» [-Wmain]
+ld:linker.ld:4: syntax error
+kernel.c:1:6: предупреждение: return type of «main» is not «int» [-Wmain]
+ld:linker.ld:4: syntax error
+kernel.c:1:6: предупреждение: return type of «main» is not «int» [-Wmain]
+16065+0 записей получено
+16065+0 записей отправлено
+скопировано 8225280 байт (8,2 MB), 0,073574 c, 112 MB/c
+Устройство не содержит ни верной таблицы разделов DOS, ни метки диска Sun, SGI или OSF
+Building a new DOS disklabel with disk identifier 0x216dfeec.
+Changes will remain in memory only, until you decide to write them.
+After that, of course, the previous content won't be recoverable.
+
+Предупреждение: неверный флаг 0x0000 таблицы разделов 4 будет исправлен записью
+kernel.c:1:6: предупреждение: return type of «main» is not «int» [-Wmain]
+ld: unrecognised emulation mode: i386
+Supported emulations: elf_x86_64 elf32_x86_64 elf_i386 i386linux elf_l1om elf_k1om
+ld: i386:x86-64 architecture of input file `boot.o' is incompatible with i386 output
+ld: i386:x86-64 architecture of input file `kernel.o' is incompatible with i386 output
+ld: i386:x86-64 architecture of input file `boot.o' is incompatible with i386 output
+ld: i386:x86-64 architecture of input file `kernel.o' is incompatible with i386 output
+kernel.c:1:6: предупреждение: return type of «main» is not «int» [-Wmain]
+as: unrecognized option '-m32'
+16065+0 записей получено
+16065+0 записей отправлено
+скопировано 8225280 байт (8,2 MB), 0,0684992 c, 120 MB/c
+Устройство не содержит ни верной таблицы разделов DOS, ни метки диска Sun, SGI или OSF
+Building a new DOS disklabel with disk identifier 0x195b0348.
+Changes will remain in memory only, until you decide to write them.
+After that, of course, the previous content won't be recoverable.
+
+Предупреждение: неверный флаг 0x0000 таблицы разделов 4 будет исправлен записью
+kernel.c:1:6: предупреждение: return type of «main» is not «int» [-Wmain]
+16065+0 записей получено
+16065+0 записей отправлено
+скопировано 8225280 байт (8,2 MB), 0,0402006 c, 205 MB/c
+Устройство не содержит ни верной таблицы разделов DOS, ни метки диска Sun, SGI или OSF
+Building a new DOS disklabel with disk identifier 0x2db19329.
+Changes will remain in memory only, until you decide to write them.
+After that, of course, the previous content won't be recoverable.
+
+Предупреждение: неверный флаг 0x0000 таблицы разделов 4 будет исправлен записью
+kernel.c:1:1: ошибка: unknown type name «uint16»
+kernel.c:1:22: ошибка: «uint16» undeclared here (not in a function)
+kernel.c:1:29: ошибка: expected expression before «)» token
+kernel.c:3:6: предупреждение: return type of «main» is not «int» [-Wmain]
+kernel.c:1:1: ошибка: unknown type name «uint16»
+kernel.c:1:22: ошибка: «uint16» undeclared here (not in a function)
+kernel.c:1:29: ошибка: expected expression before «)» token
+kernel.c:2:6: предупреждение: return type of «main» is not «int» [-Wmain]
+16065+0 записей получено
+16065+0 записей отправлено
+скопировано 8225280 байт (8,2 MB), 0,0382107 c, 215 MB/c
+Устройство не содержит ни верной таблицы разделов DOS, ни метки диска Sun, SGI или OSF
+Building a new DOS disklabel with disk identifier 0xa1ccc5e6.
+Changes will remain in memory only, until you decide to write them.
+After that, of course, the previous content won't be recoverable.
+
+Предупреждение: неверный флаг 0x0000 таблицы разделов 4 будет исправлен записью
+16065+0 записей получено
+16065+0 записей отправлено
+скопировано 8225280 байт (8,2 MB), 0,0307442 c, 268 MB/c
+Устройство не содержит ни верной таблицы разделов DOS, ни метки диска Sun, SGI или OSF
+Building a new DOS disklabel with disk identifier 0xa3e88c1c.
+Changes will remain in memory only, until you decide to write them.
+After that, of course, the previous content won't be recoverable.
+
+Предупреждение: неверный флаг 0x0000 таблицы разделов 4 будет исправлен записью
+16065+0 записей получено
+16065+0 записей отправлено
+скопировано 8225280 байт (8,2 MB), 0,0285494 c, 288 MB/c
+Устройство не содержит ни верной таблицы разделов DOS, ни метки диска Sun, SGI или OSF
+Building a new DOS disklabel with disk identifier 0x76c6d5e8.
+Changes will remain in memory only, until you decide to write them.
+After that, of course, the previous content won't be recoverable.
+
+Предупреждение: неверный флаг 0x0000 таблицы разделов 4 будет исправлен записью
