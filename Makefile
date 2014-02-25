@@ -1,11 +1,12 @@
-CFLAGS = -Wall -fno-builtin -nostdinc -nostdlib
+CFLAGS = -Wall -fno-builtin -nostdinc -nostdlib -O3
 OBJFILES = \
 	boot.o \
-	kernel.o
+	kernel.o \
+	common/pci.o
 IMAGE = os.img
 
 all: kernel.bin
-kernel.bin: kernel.o boot.o
+kernel.bin: $(OBJFILES)
 	@echo "Линковка ядра"
 	ld -T linker.ld -o $@ $^ -m elf_i386
 .s.o:
@@ -13,7 +14,7 @@ kernel.bin: kernel.o boot.o
 	@as -o $@ $< --32
 .c.o:
 	@echo "Компиляция "$<
-	@gcc $(CFLAGS) -o $@ -c -std=c99 $< -I./include -m32 -Wmain 
+	@gcc $(CFLAGS) -o $@ -c -std=gnu99 $< -I./include -m32 -Wmain 
 
 image: kernel.bin
 	@echo "Создание образа"

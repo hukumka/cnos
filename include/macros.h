@@ -19,11 +19,11 @@ static inline uint32 inl(uint16 port){
 }
 
 static inline void outb(uint16 port, uint8 value){
-	asm volatile( "outb %0, %1" : : "a"(val), "Nd"(port) );
+	asm volatile( "outb %0, %1" : : "a"(value), "Nd"(port) );
 }
 static inline void outw(uint16 port, uint16 value){
-	asm volatile( "outw %0, %1" : : "a"(val), "Nd"(port) );
+	asm volatile( "outw %0, %1" : : "a"(value), "Nd"(port) );
 }
 static inline void outl(uint16 port, uint32 value){
-	asm volatile( "outl %0, %1" : : "a"(val), "Nd"(port) );
+	asm volatile( "outl %0, %1" : : "a"(value), "Nd"(port) );
 }
