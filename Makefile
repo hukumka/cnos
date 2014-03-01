@@ -1,4 +1,8 @@
-CFLAGS = -Wall -fno-builtin -nostdinc -nostdlib -O3
+DEBUG=true
+CFLAGS:=-Wall -fno-builtin -nostdinc -nostdlib -O3 -std=gnu99 -m32
+ifeq ($(DEBUG), true)
+	CFLAGS:=$(CFLAGS) -g3
+endif
 OBJFILES = \
 	boot.o \
 	kernel.o \
@@ -6,15 +10,16 @@ OBJFILES = \
 IMAGE = os.img
 
 all: kernel.bin
+	echo $(CFLAGS)
 kernel.bin: $(OBJFILES)
 	@echo "Линковка ядра"
-	ld -T linker.ld -o $@ $^ -m elf_i386
+	ld -T linker.ld -o $@ $^ -m elf_i386 -O3
 .s.o:
 	@echo "Компиляция "$<
 	@as -o $@ $< --32
 .c.o:
 	@echo "Компиляция "$<
-	@gcc $(CFLAGS) -o $@ -c -std=gnu99 $< -I./include -m32 -Wmain 
+	@gcc $(CFLAGS) -o $@ -c $< -I./include
 
 image: kernel.bin
 	@echo "Создание образа"
@@ -46,6 +51,10 @@ image: kernel.bin
 			quit\n" | grub --batch 1>/dev/null
 	@echo "Готово"
 	@-chown hukumka os.img
+debug:
+	qemu-system-i386 os.img -s -S&
+	cgdb -x debugstart.gdb kernel.bin
+	killall qemu-system-i386
 test:
 	qemu-system-i386 os.img
 clear:
