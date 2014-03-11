@@ -17,6 +17,9 @@ static inline uint32 inl(uint16 port){
 	asm volatile( "inl %1,%0" : "=a"(ret) : "Nd"(port) );
 	return ret;
 }
+static inline void repInsw(uint16 port, uint16* data, uint16 count){
+	asm volatile( "rep insw" :: "Nd"(port), "D"(data), "c"(count) );
+}
 
 static inline void outb(uint16 port, uint8 value){
 	asm volatile( "outb %0, %1" : : "a"(value), "Nd"(port) );

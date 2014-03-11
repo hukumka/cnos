@@ -29,7 +29,7 @@ uint32 PCI_ReadUInt32( PCI_Uaddr uaddr, uint8 reg){
 bool PCI_ReadHeader( PCI_Uaddr addr, PCI_Header *header){
 	for( uint8 reg=0;reg<4;++reg )
 		header->value[reg] = PCI_ReadUInt32( addr, reg );
-	if( header->vendorId==0xffff )
+	if( header->vendorId==0xffff || header->vendorId==0x0 || header->deviceId==0x0 )
 		return false;
 	return true;
 }
@@ -44,14 +44,14 @@ void PCI_Scan(){
 			addr.func=0;
 			if( ! PCI_ReadHeader( addr, &header) )
 				continue;
-			if( RecognizedDevices_Count[header.class][header.subclass]<PCI_MAX_SAME_DEVICES )
-				RecognizedDevices[header.class][header.subclass][RecognizedDevices_Count[header.class][header.subclass]++]=addr;
+			if( RecognizedDevices_Count[header.Class][header.subclass]<PCI_MAX_SAME_DEVICES )
+				RecognizedDevices[header.Class][header.subclass][RecognizedDevices_Count[header.Class][header.subclass]++]=addr;
 			if( header.headerType & PCI_HEADERTYPE_MULTIFUNC ){
 				for( addr.func=1; addr.func<PCI_MAX_FUNCTIONS; ++addr.func ){
 					if( ! PCI_ReadHeader( addr, &header) )
 						continue;
-					if( RecognizedDevices_Count[header.class][header.subclass]<PCI_MAX_SAME_DEVICES )
-						RecognizedDevices[header.class][header.subclass][RecognizedDevices_Count[header.class][header.subclass]++]=addr;
+					if( RecognizedDevices_Count[header.Class][header.subclass]<PCI_MAX_SAME_DEVICES )
+						RecognizedDevices[header.Class][header.subclass][RecognizedDevices_Count[header.Class][header.subclass]++]=addr;
 				}
 			}
 		}

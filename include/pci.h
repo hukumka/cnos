@@ -17,9 +17,9 @@
 #define PCI_MAX_SAME_DEVICES 0x10
 
 typedef struct {
-	uint8 bus:8;
-	uint8 dev:4;
-	uint8 func:4;
+	uint8 bus;
+	uint8 dev;
+	uint8 func;
 }PCI_Uaddr;
 
 typedef union{
@@ -31,7 +31,7 @@ typedef union{
 		uint8 recognizeId;
 		uint8 progIF;
 		uint8 subclass;
-		uint8 class;
+		uint8 Class;
 		uint8 cls;
 		uint8 latencyTimer;
 		uint8 headerType;

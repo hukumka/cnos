@@ -1,26 +1,35 @@
 DEBUG=true
-CFLAGS:=-Wall -fno-builtin -nostdinc -nostdlib -O3 -std=gnu99 -m32
+CFLAGS:=-Wall -fno-builtin -nostdinc -nostdlib -std=gnu99 -m32 -I./include
+CPPFLAGS:=-Wall -fno-builtin -nostdinc -nostdlib -fno-exceptions -fno-rtti -m32 -I./include
+CC:=gcc
+CPP:=g++
 ifeq ($(DEBUG), true)
 	CFLAGS:=$(CFLAGS) -g3
+	CPPFLAGS:=$(CPPFLAGS) -g3
+else
+	CFLAGS:=$(CFLAGS) -O3
+	CPPFLAGS:=$(CPPFLAGS) -O3
 endif
 OBJFILES = \
 	boot.o \
 	kernel.o \
-	common/pci.o
+	common/pci.o \
+	common/ata.o
 IMAGE = os.img
 
 all: kernel.bin
-	echo $(CFLAGS)
 kernel.bin: $(OBJFILES)
 	@echo "Линковка ядра"
-	ld -T linker.ld -o $@ $^ -m elf_i386 -O3
+	@ld -T linker.ld -o $@ $^ -m elf_i386
 .s.o:
 	@echo "Компиляция "$<
 	@as -o $@ $< --32
 .c.o:
 	@echo "Компиляция "$<
-	@gcc $(CFLAGS) -o $@ -c $< -I./include
-
+	@$(CC) $(CFLAGS) -o $@ -c $<
+.cpp.o:
+	@echo "Компиляция "$<
+	@$(CPP) $(CPPFLAGS) -o $@ -c $< -include cpp.h
 image: kernel.bin
 	@echo "Создание образа"
 	@dd if=/dev/zero of=$(IMAGE) bs=512 count=16065 1>/dev/null 2>>errors.log
@@ -52,10 +61,10 @@ image: kernel.bin
 	@echo "Готово"
 	@-chown hukumka os.img
 debug:
-	qemu-system-i386 os.img -s -S&
-	cgdb -x debugstart.gdb kernel.bin
-	killall qemu-system-i386
+	@qemu-system-i386 os.img -s -S&
+	@cgdb -x debugstart.gdb kernel.bin
+	@killall qemu-system-i386
 test:
-	qemu-system-i386 os.img
+	@qemu-system-i386 os.img
 clear:
-	-rm $(OBJFILES) kernel.bin $(IMAGE) 
+	@-rm $(OBJFILES) kernel.bin $(IMAGE) 
