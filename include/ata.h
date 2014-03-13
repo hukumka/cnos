@@ -12,3 +12,4 @@ typedef enum{
 typedef bool ATA_CHANNEL;
 typedef bool ATA_DEVICE_ID;
 int ATAPIO_Read( uint32 addr, uint8 count, drive Drive, void * dst );
+int ATAPIO_Write( uint32 addr, uint8 count, drive Drive, void * src );

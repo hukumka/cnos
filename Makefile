@@ -7,8 +7,8 @@ ifeq ($(DEBUG), true)
 	CFLAGS:=$(CFLAGS) -g3
 	CPPFLAGS:=$(CPPFLAGS) -g3
 else
-	CFLAGS:=$(CFLAGS) -O3
-	CPPFLAGS:=$(CPPFLAGS) -O3
+	CFLAGS:=$(CFLAGS) -O2
+	CPPFLAGS:=$(CPPFLAGS) -O2
 endif
 OBJFILES = \
 	boot.o \
