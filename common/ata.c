@@ -57,8 +57,8 @@ int ATAPIO_Read( uint32 addr, uint8 count, drive Drive, void * dst){
 	return ATAPIO_DONE;
 }
 
-int ATAPIO_Write( uint32 addr, uint8 count, drive Drive, void * src){
-	uint16 * Src = src;
+int ATAPIO_Write( uint32 addr, uint8 count, drive Drive, const void * src){
+	const uint16 * Src = src;
 	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_HEAD, 0xE0 | ((uint8)Drive<<4) | ((addr>>24)&0xf) );
 	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_DATA, NULL );
 	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_SECTORCOUNT, count );
