@@ -32,7 +32,7 @@ kernel.bin: $(OBJFILES)
 	@$(CPP) $(CPPFLAGS) -o $@ -c $< -include cpp.h
 image: kernel.bin
 	@echo "Создание образа"
-	@dd if=/dev/zero of=$(IMAGE) bs=512 count=160650 1>/dev/null 2>>errors.log
+	@dd if=/dev/zero of=$(IMAGE) bs=512 count=16065 1>/dev/null 2>>errors.log
 	@echo "Создание FAT32 раздела"
 	@losetup /dev/loop6 $(IMAGE) 
 	@(echo c; echo u; echo n; echo p; echo 1; echo ; echo a; echo 1; echo t; echo c; echo w;) | fdisk /dev/loop6 1>/dev/null 2>>errors.log || true
