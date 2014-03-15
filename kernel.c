@@ -10,6 +10,6 @@ int main(){
 	for(i=2;i<256;++i){
 		VIDEODATA[i]=VIDEODATA[i-1]+VIDEODATA[i-2];
 	}
-	ATAPIO_Write(0,1,master,VIDEODATA);
+//	ATAPIO_Write(0,1,master,VIDEODATA);
 	return 0;
 }
