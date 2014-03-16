@@ -35,7 +35,7 @@ Cn OS
 	*** Сборка: ***
 
 Могут потребоваться: 
-	gcc, qemu, cgdb 
+	gcc, qemu, cgdb, grub
 
 $ make
 $ sudo make image
