@@ -18,8 +18,9 @@ stack:
 	.comm magic, 4
 
 loader:
-	movl $(stack+STACKSIZE), %esp
-	call main
+
+	movl	$(stack+STACKSIZE), %esp
+	call	main
 	
 	cli
 	hlt

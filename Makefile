@@ -14,7 +14,8 @@ OBJFILES = \
 	boot.o \
 	kernel.o \
 	common/pci.o \
-	common/ata.o
+	common/ata.o \
+	common/memory.o
 IMAGE = os.img
 
 all: kernel.bin
