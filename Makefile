@@ -15,7 +15,8 @@ OBJFILES = \
 	kernel.o \
 	common/pci.o \
 	common/ata.o \
-	common/memory.o
+	common/memory.o \
+	common/fat32.o
 IMAGE = os.img
 
 all: kernel.bin

@@ -7,6 +7,5 @@
 uint16 *VIDEODATA = (uint16*) 0xB8000;
 int main(){
 	InitMemoryTable();
-	void * a = Allocate(10);
 	return 0;
 }

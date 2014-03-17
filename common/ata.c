@@ -44,8 +44,8 @@ int ATAPIO_Read( uint32 addr, uint8 count, drive Drive, void * dst){
 	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_DATA, NULL );
 	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_SECTORCOUNT, count );
 	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_LBA_0_7, (uint8)addr);
-	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_LBA_8_15, (uint8)addr);
-	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_LBA_16_23, (uint8)addr);
+	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_LBA_8_15, (uint8)(addr>>8));
+	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_LBA_16_23, (uint8)(addr>>16));
 	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_COMMAND, ATAPIO_COMMAND_READ);
 	int status, i;
 	for(i=0;i<count;++i){
