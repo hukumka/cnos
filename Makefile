@@ -38,11 +38,12 @@ image: kernel.bin
 	@echo "Создание FAT32 раздела"
 	@losetup /dev/loop6 $(IMAGE) 
 	@(echo c; echo u; echo n; echo p; echo 1; echo ; echo a; echo 1; echo t; echo c; echo w;) | fdisk /dev/loop6 1>/dev/null 2>>errors.log || true
+	@#fdisk /dev/loop6
 	@losetup /dev/loop7 $(IMAGE) \
 		--offset `echo \`fdisk -lu /dev/loop6 | sed -n 10p | awk '{print $$3}'\`*512 | bc` \
 		--sizelimit `echo \`fdisk -lu /dev/loop6 | sed -n 10p | awk '{print $$4}'\`*512 | bc`
 	@losetup -d /dev/loop6
-	@mkdosfs /dev/loop7
+	@mkdosfs -F 32 /dev/loop7
 	
 	@echo "Записываем орех и grub на изображение"
 	@mkdir -p tmpdir
