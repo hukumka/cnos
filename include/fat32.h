@@ -22,11 +22,14 @@ struct Fat32_DirMember{
 };
 
 typedef struct{
+	uint8 fileSystem;
+	char filename[11];
 	uint32 firstCluster;
 	uint8 *buffer;
 	uint32 fileSize;
 	uint32 pointer;
-	uint8 fileSystem;
+	uint32 recordCluster;
+	uint8 recordId;
 } FAT32_FILE;
 
 
@@ -38,3 +41,4 @@ bool Fat32_Init( uint32 );
 bool Fat32_open( uint32, const char *,FAT32_FILE *);
 
 uint32 Fat32_Read( FAT32_FILE *f, void *data, uint32 size);
+uint32 Fat32_Write( FAT32_FILE *f, void *data, uint32 size);

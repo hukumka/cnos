@@ -14,6 +14,5 @@ int main(){
 	Fat32_open( 2, "boot/grub/menu.lst", &f);
 	char data[513];
 	int size = Fat32_Read( &f, data, 512 );
-	data[size]=0;
 	return 0;
 }
