@@ -10,9 +10,9 @@ int main(){
 	InitMemoryTable();
 	LoadPartitions();
 	SelectDisk(0);
-	FAT32_FILE f;
-	Fat32_open( 2, "boot/grub/menu.lst", &f);
-	char data[513];
-	int size = Fat32_Read( &f, data, 512 );
+	struct Fat32_DirMember mem;
+	Fat32_CreateFile( "boot/", "1234.qwe", false);
+
+	Fat32_SearchMember( 2, "boot/1234.qwe", &mem);
 	return 0;
 }
