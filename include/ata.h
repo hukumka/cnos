@@ -35,6 +35,7 @@ ATA сервис
 #define ATAPIO_ERROR 0x0
 #define ATAPIO_DONE 0x1
 #define ATAPIO_FAULT 0x2
+#define SECTOR_SIZE 512
 
 typedef enum{
 	master,

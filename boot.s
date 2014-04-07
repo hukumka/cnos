@@ -23,5 +23,4 @@ loader:
 	call	main
 	
 	cli
-	hlt
 	jmp . 

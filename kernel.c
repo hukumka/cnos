@@ -3,10 +3,14 @@
 #include <ata.h>
 #include <memory.h>
 #include <pci.h>
+#include <fat32.h>
+#include <fs.h>
 
-uint16 *VIDEODATA = (uint16*) 0xB8000;
 int main(){
 	InitMemoryTable();
-	void * a = Allocate(10);
+	LoadPartitions();
+	ClearScreen();
+	char a[]="qwetsss";
+	printf("Here number %d and string \"%s\"", 456,a);
 	return 0;
 }
