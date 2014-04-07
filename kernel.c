@@ -9,10 +9,8 @@
 int main(){
 	InitMemoryTable();
 	LoadPartitions();
-	SelectDisk(0);
-	struct Fat32_DirMember mem;
-	Fat32_CreateFile( "boot/", "1234.qwe", false);
-
-	Fat32_SearchMember( 2, "boot/1234.qwe", &mem);
+	ClearScreen();
+	char a[]="qwetsss";
+	printf("Here number %d and string \"%s\"", 456,a);
 	return 0;
 }

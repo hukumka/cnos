@@ -19,12 +19,6 @@ void LoadPartitions(){
 	}
 }
 
-/*
-struct functions{
-	FILE* (*fopen)(const char path);
-} CurrentFunctions;
-*/
-
 uint32 SelectDisk( uint8 id ){
 	switch( FS_Type[id] ){
 		case 0xC:
@@ -33,3 +27,4 @@ uint32 SelectDisk( uint8 id ){
 			return 0;
 	}
 }
+

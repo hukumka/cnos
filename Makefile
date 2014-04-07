@@ -18,7 +18,8 @@ OBJFILES = \
 	common/memory.o \
 	common/fs/fat32.o \
 	common/fs/fat32_lowLevel.o \
-	common/fs/fs.o
+	common/fs/fs.o \
+	common/io.o
 IMAGE = os.img
 
 all: kernel.bin

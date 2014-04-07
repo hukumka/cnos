@@ -16,7 +16,7 @@
 
 #define PCI_MAX_SAME_DEVICES 0x10
 
-typedef struct {
+typedef struct _Packed{
 	uint8 bus;
 	uint8 dev;
 	uint8 func;

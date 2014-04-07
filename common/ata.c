@@ -38,15 +38,31 @@ int ATAPIO_PollStatus(){
 	}
 }
 
-int ATAPIO_Read( uint32 addr, uint8 count, drive Drive, void * dst){
-	uint16 * Dst = dst;
+static inline void SelectDiskAndAddress( drive Drive,uint32 addr){
 	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_HEAD, 0xE0 | ((uint8)Drive<<4) | ((addr>>24)&0xf) );
-	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_DATA, NULL );
-	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_SECTORCOUNT, count );
 	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_LBA_0_7, (uint8)addr);
 	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_LBA_8_15, (uint8)(addr>>8));
 	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_LBA_16_23, (uint8)(addr>>16));
+}
+static inline void SendReadCommand(){
 	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_COMMAND, ATAPIO_COMMAND_READ);
+}
+static inline void SendWriteCommand(){
+	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_COMMAND, ATAPIO_COMMAND_WRITE);
+}
+static inline void PrepareAta(){
+	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_FEATURES, NULL );
+}
+static inline void SetCountOfUsebleSectors(uint8 count){
+	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_SECTORCOUNT, count );
+}
+
+int ATAPIO_Read( uint32 addr, uint8 count, drive Drive, void * dst){
+	uint16 * Dst = dst;
+	PrepareAta();
+	SetCountOfUsebleSectors(count);
+	SelectDiskAndAddress( Drive,addr );
+	SendReadCommand();
 	int status, i;
 	for(i=0;i<count;++i){
 		status=ATAPIO_PollStatus();
@@ -59,13 +75,10 @@ int ATAPIO_Read( uint32 addr, uint8 count, drive Drive, void * dst){
 
 int ATAPIO_Write( uint32 addr, uint8 count, drive Drive, const void * src){
 	const uint16 * Src = src;
-	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_HEAD, 0xE0 | ((uint8)Drive<<4) | ((addr>>24)&0xf) );
-	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_DATA, NULL );
-	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_SECTORCOUNT, count );
-	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_LBA_0_7, (uint8)addr);
-	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_LBA_8_15, (uint8)(addr>>8));
-	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_LBA_16_23, (uint8)(addr>>16));
-	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_COMMAND, ATAPIO_COMMAND_WRITE);
+	PrepareAta();
+	SetCountOfUsebleSectors(count);
+	SelectDiskAndAddress( Drive,addr );
+	SendWriteCommand( addr );
 	int status, i;
 	for( i=0; i<count; ++i){
 		status=ATAPIO_PollStatus();

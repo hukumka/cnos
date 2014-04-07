@@ -72,5 +72,3 @@ bool Fat32_LoadCluster( uint32 cluster, void *data ){
 bool Fat32_SaveCluster( uint32 cluster, void *data ){
 	return ATAPIO_Write( CurrentParams.ClustersBegin + (cluster-2) * CurrentParams.SectorsPerCluster, CurrentParams.SectorsPerCluster, master, data);
 }
-
-
