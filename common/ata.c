@@ -25,6 +25,8 @@
 #define ATAPIO_COMMAND_WRITE 0x30
 #define ATAPIO_COMMAND_CACHEFLUSH 0xE7
 
+#define SECTOR_SIZE 512
+
 int ATAPIO_PollStatus(){
 	uint8 status;
 	while(true){
@@ -38,7 +40,7 @@ int ATAPIO_PollStatus(){
 	}
 }
 
-static inline void SelectDiskAndAddress( drive Drive,uint32 addr){
+static inline void SelectDiskAndSector( drive Drive,uint32 addr){
 	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_HEAD, 0xE0 | ((uint8)Drive<<4) | ((addr>>24)&0xf) );
 	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_LBA_0_7, (uint8)addr);
 	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_LBA_8_15, (uint8)(addr>>8));
@@ -57,41 +59,49 @@ static inline void SetCountOfUsebleSectors(uint8 count){
 	outb( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_SECTORCOUNT, count );
 }
 
+//Чтение из секттора, выбранного SelectDiskAndSector
+static inline void ReadSector( uint16* dst ){
+	repInsw( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_DATA, dst, 0x100); 
+}
+// Запись в сектор, выбранный SelectDiskAndSector
+static inline void WriteSector( uint16* src ){
+	asm volatile(
+		"ATA_loop_WriteSector: \n" 
+		"dec %%ecx\n" 
+		"outsw\n" 
+		"testl %%ecx,%%ecx\n" 
+		"jnz ATA_loop_WriteSector\n" 
+		:: "Nd"(ATAPIO_BASE_ADDR+ATAPIO_PORT_OFFSET_DATA),"S"(src), "c"(0x100)
+	);
+}
+
+
 int ATAPIO_Read( uint32 addr, uint8 count, drive Drive, void * dst){
-	uint16 * Dst = dst;
 	PrepareAta();
 	SetCountOfUsebleSectors(count);
-	SelectDiskAndAddress( Drive,addr );
+	SelectDiskAndSector( Drive,addr );
 	SendReadCommand();
 	int status, i;
 	for(i=0;i<count;++i){
 		status=ATAPIO_PollStatus();
 		if( status!=ATAPIO_DONE )
 			return status;
-		repInsw( ATAPIO_BASE_ADDR + ATAPIO_PORT_OFFSET_DATA, Dst+i*0x100, 0x100); 
+		ReadSector( ( (uint16*)dst + (SECTOR_SIZE/sizeof(uint16))*i  ) );
 	}
 	return ATAPIO_DONE;
 }
 
 int ATAPIO_Write( uint32 addr, uint8 count, drive Drive, const void * src){
-	const uint16 * Src = src;
 	PrepareAta();
 	SetCountOfUsebleSectors(count);
-	SelectDiskAndAddress( Drive,addr );
+	SelectDiskAndSector( Drive,addr );
 	SendWriteCommand( addr );
 	int status, i;
 	for( i=0; i<count; ++i){
 		status=ATAPIO_PollStatus();
 		if( status!=ATAPIO_DONE )
 			return status;
-		asm volatile(
-			"ATA_loop_WriteSector: \n" 
-			"dec %%ecx\n" 
-			"outsw\n" 
-			"testl %%ecx,%%ecx\n" 
-			"jnz ATA_loop_WriteSector\n" 
-			:: "Nd"(ATAPIO_BASE_ADDR+ATAPIO_PORT_OFFSET_DATA),"S"(Src+i*0x100), "c"(0x100)
-		);
+		WriteSector( (uint16*)src + (SECTOR_SIZE/sizeof(uint16))*i );
 	}
 	return ATAPIO_DONE;
 }

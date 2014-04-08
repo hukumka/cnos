@@ -65,24 +65,24 @@ void printf_s(const char *s){
 
 int printf( const char *format, ...){
 	int count=0;
-	char *p = (char*)&format+sizeof(char*);
+	char *argumenPointer = (char*) &format +sizeof(const char*);
 	for(int i=0; format[i]; ++i){
 		if( format[i]=='%' ){
 			i++;
 			switch(format[i]){
-				case 0:
+				case '\0':
 					return count;
 				case '%':
 					putchar('%');
 					break;
 				case 'd':
-					printf_d( *(int*)p);
-					p+=sizeof(int);
+					printf_d( *(int*)argumenPointer);
+					argumenPointer+=sizeof(int);
 					count++;
 					break;
 				case 's':
-					printf_s( *(char**)(p) );
-					p+=sizeof(char*);
+					printf_s( *(char**)(argumenPointer) );
+					argumenPointer+=sizeof(char*);
 					count++;
 					break;
 				default:
@@ -100,5 +100,5 @@ int printf( const char *format, ...){
 /////////////
 
 int getchar(){
-	return 0;	
+	return 0;
 }

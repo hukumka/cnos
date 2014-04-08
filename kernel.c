@@ -7,8 +7,8 @@
 #include <fs.h>
 
 int main(){
-	InitMemoryTable();
-	LoadPartitions();
+	InitMemory();
+	InitFilesystemManager();
 	ClearScreen();
 	char a[]="qwetsss";
 	printf("Here number %d and string \"%s\"", 456,a);
