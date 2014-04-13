@@ -52,7 +52,9 @@ image: kernel.bin
 	@mkdir -p tmpdir
 	@mount /dev/loop7 tmpdir
 	@mkdir tmpdir/boot
+	@mkdir tmpdir/bin
 	@cp -r grub tmpdir/boot
+	@cp -r bin tmpdir/
 	@cp kernel.bin tmpdir
 	@sleep 1
 	@umount /dev/loop7

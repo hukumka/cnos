@@ -5,9 +5,9 @@ bool Fat32_SaveFat(uint8);
 
 bool Fat32_Init( uint32 );
 
-bool Fat32_LoadCluster( uint32, void* );
-bool Fat32_SaveCluster( uint32, void* );
-uint32 Fat32_NextCluster( uint32 );
+bool LoadCluster( uint32, void* );
+bool SaveCluster( uint32, void* );
+uint32 NextCluster( uint32 );
 
 struct fat32_currparams{
 	uint32 SectorsPerFat;

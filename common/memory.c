@@ -1,4 +1,5 @@
 #include <memory.h>
+#include <io.h>
 
 #define KB 0x400
 #define MB (0x400*KB)
@@ -37,6 +38,7 @@ void* Allocate( int size ){
 		}else
 			foundedFreeSize=0;
 	}
+	printf("Error. Unable to allocate memory.\n");
 	return (void*)0x0;
 }
 

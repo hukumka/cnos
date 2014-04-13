@@ -9,8 +9,13 @@
 int main(){
 	InitMemoryTable();
 	LoadPartitions();
+	SelectDisk(0);
 	ClearScreen();
-	char a[]="qwetsss";
-	printf("Here number %d and string \"%s\"", 456,a);
+	FAT32_FILE f;
+	Fat32_open( 2, "bin/0.bin", &f);
+	void *data = Allocate( f.fileSize/512 + 1 );
+	Fat32_Read(&f,data,f.fileSize);
+	void (*prog)() = data;
+	prog();
 	return 0;
 }

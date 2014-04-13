@@ -26,7 +26,7 @@ void Fat32_SelectDirectory( uint32 cluster ){
 
 bool Fat32_GetDirNextMember( struct Fat32_DirMember * rezult ){
 	if( currentDirMember==CurrentParams.SectorsPerCluster*DIRECTORY_RECORDS_PER_SECTOR ){
-		currentCluster = Fat32_NextCluster( currentCluster );
+		currentCluster = NextCluster( currentCluster );
 		if( !IsClusterIdCorrect(currentCluster) ){
 			Fat32_SelectDirectory( currentDirectory );
 			return false;
@@ -35,7 +35,7 @@ bool Fat32_GetDirNextMember( struct Fat32_DirMember * rezult ){
 	}
 	if( reloadFlag ){
 		currentDirMember = 0;
-		Fat32_LoadCluster( currentCluster, ClusterData );
+		LoadCluster( currentCluster, ClusterData );
 		reloadFlag = false;
 	}
 	rezult->attribByte = ClusterData[currentDirMember*DIRECTORY_RECORD_SIZE + 0xB];
@@ -143,9 +143,9 @@ bool Fat32_open( uint32 baseDir, const char *path, FAT32_FILE *f ){
 
 void Fat32_RewriteHead( FAT32_FILE *f ){
 	uint32 cluster = f->recordCluster;
-	Fat32_LoadCluster( cluster, ClusterData );
+	LoadCluster( cluster, ClusterData );
 	*(uint32*)(ClusterData + DIRECTORY_RECORD_SIZE * f->recordId + 0x1C) = f->fileSize;
-	Fat32_SaveCluster( cluster, ClusterData );
+	SaveCluster( cluster, ClusterData );
 }
 
 // Чтение из файла
@@ -154,12 +154,12 @@ uint32 Fat32_Read( FAT32_FILE *f, void *data, uint32 size ){
 	uint32 clusterSize = 512 * CurrentParams.SectorsPerCluster;
 	int i;
 	for( i=clusterSize; i<f->pointer; i+=clusterSize)
-		cluster = Fat32_NextCluster( cluster );
-	Fat32_LoadCluster( cluster,  f->buffer );
+		cluster = NextCluster( cluster );
+	LoadCluster( cluster,  f->buffer );
 	for( i=0; (f->pointer + i < f->fileSize) && (i < size); i++ ){
 		if( (f->pointer+i) % clusterSize == 0 && i!=0 ){
-			cluster = Fat32_NextCluster( cluster );
-			Fat32_LoadCluster( cluster, f->buffer);
+			cluster = NextCluster( cluster );
+			LoadCluster( cluster, f->buffer);
 		}
 		*( ((char*)data) + i) = f->buffer[ (f->pointer+i)%clusterSize ];
 	}
@@ -180,14 +180,14 @@ uint32 Fat32_Write( FAT32_FILE *f, void *data, uint32 size ){
 		FAT[0][j]=0xffffffff;
 	}
 	for( i=clusterSize; i<f->pointer; i+=clusterSize)
-		cluster = Fat32_NextCluster( cluster );
-	Fat32_LoadCluster( cluster, f->buffer );
+		cluster = NextCluster( cluster );
+	LoadCluster( cluster, f->buffer );
 	for( i=0; (f->pointer+i < f->fileSize) && ( i<size ); ++i ){
 		if( (f->pointer+i) % clusterSize == 0 && i!=0 ){
-			Fat32_SaveCluster( cluster, f->buffer);
-			cluster = Fat32_NextCluster( cluster );
+			SaveCluster( cluster, f->buffer);
+			cluster = NextCluster( cluster );
 			if( f->pointer + i + clusterSize > size ){ // Если следующий кластер не полностью перезаписан, прочесть его перед записью
-				Fat32_LoadCluster( cluster, f->buffer );
+				LoadCluster( cluster, f->buffer );
 			}
 		}
 		f->buffer[ (f->pointer+i)%clusterSize ] = *( ((char*)data) + i);
@@ -208,7 +208,7 @@ uint32 Fat32_Write( FAT32_FILE *f, void *data, uint32 size ){
 	label_exit:
 	if( j!=2 )
 		Fat32_SaveFat( 0 );
-	Fat32_SaveCluster( cluster, f->buffer );
+	SaveCluster( cluster, f->buffer );
 	if( f->fileSize < f->pointer + i ){
 		f->fileSize = f->pointer + i;
 		Fat32_RewriteHead( f );
@@ -270,16 +270,16 @@ void Fat32_DeleteFile( struct Fat32_DirMember *f){
 	// Помечаем кластеры файла как свободные
 	while( IsClusterIdCorrect(cl) ){
 		pcl = cl;
-		cl = Fat32_NextCluster( cl );
+		cl = NextCluster( cl );
 		FAT[0][pcl] = 0;
 	}
 	
 	if( f->recordCluster ){
-		uint32 cl1 = Fat32_NextCluster( f->recordCluster );
+		uint32 cl1 = NextCluster( f->recordCluster );
 		if( IsClusterIdCorrect(cl1)){
 			bool flag = true;
 			while( flag && IsClusterIdCorrect(cl1) ){
-				Fat32_LoadCluster( cl1, ClusterData );
+				LoadCluster( cl1, ClusterData );
 				for( int i=0; i<CurrentParams.SectorsPerCluster*16; ++i ){
 					if( ClusterData[i*DIRECTORY_RECORD_SIZE] == 0xe5 )
 						continue;
@@ -288,7 +288,7 @@ void Fat32_DeleteFile( struct Fat32_DirMember *f){
 					break;
 				}
 				if( flag ){
-					uint32 tmp = Fat32_NextCluster( cl1 );
+					uint32 tmp = NextCluster( cl1 );
 					FAT[0][cl1] = 0;
 					cl1 = tmp;
 				}
@@ -298,7 +298,7 @@ void Fat32_DeleteFile( struct Fat32_DirMember *f){
 	}
 	Fat32_SaveFat(0);
 	
-	Fat32_LoadCluster(f->recordCluster, ClusterData);
+	LoadCluster(f->recordCluster, ClusterData);
 	// Последний элемент каталога.
 	if( ClusterData[ (f->recordId+1)*DIRECTORY_RECORD_SIZE ] == 0 || ( IsClusterIdCorrect(FAT[0][f->recordCluster]) && f->recordId==CurrentParams.SectorsPerCluster*16 ) ){
 		//Отмечаем его и все предыдущие как конец, в результате его получим, что элемент, следующий за последним использованным
@@ -308,7 +308,7 @@ void Fat32_DeleteFile( struct Fat32_DirMember *f){
 	}else{
 		ClusterData[f->recordId*DIRECTORY_RECORD_SIZE] = 0xe5;
 	}
-	Fat32_SaveCluster( f->recordCluster, ClusterData);
+	SaveCluster( f->recordCluster, ClusterData);
 }
 
 bool Fat32_DirAddMember( struct Fat32_DirMember* dir, struct Fat32_DirMember* mem){
@@ -321,10 +321,10 @@ bool Fat32_DirAddMember( struct Fat32_DirMember* dir, struct Fat32_DirMember* me
 	}
 	do{
 		cluster = nc;
-		Fat32_LoadCluster( cluster, ClusterData);
+		LoadCluster( cluster, ClusterData);
 		for( i=0; i<16*CurrentParams.SectorsPerCluster; ++i){
 			if( ClusterData[i*DIRECTORY_RECORD_SIZE] == 0xe5 ){
-				Fat32_LoadCluster(cluster, ClusterData);
+				LoadCluster(cluster, ClusterData);
 				goto write;
 			}else if( ClusterData[i*DIRECTORY_RECORD_SIZE]==0){
 				if( i == DIRECTORY_RECORDS_PER_SECTOR*CurrentParams.SectorsPerCluster-1 ){
@@ -334,7 +334,7 @@ bool Fat32_DirAddMember( struct Fat32_DirMember* dir, struct Fat32_DirMember* me
 					FAT[0][cluster] = j;
 					j=ClusterData[0];
 					ClusterData[0]=0;
-					Fat32_SaveCluster( j, ClusterData);
+					SaveCluster( j, ClusterData);
 					ClusterData[0]=j;
 					Fat32_SaveFat(0);
 				}else{
@@ -343,7 +343,7 @@ bool Fat32_DirAddMember( struct Fat32_DirMember* dir, struct Fat32_DirMember* me
 				goto write;
 			}
 		}
-		nc = Fat32_NextCluster(cluster);
+		nc = NextCluster(cluster);
 	}while( IsClusterIdCorrect(nc) );
 	for( j=2; FAT[0][j] != 0; ++j)
 		if( j == CurrentParams.SectorsPerFat*FAT_RECORDS_PER_SECTOR )
@@ -351,7 +351,7 @@ bool Fat32_DirAddMember( struct Fat32_DirMember* dir, struct Fat32_DirMember* me
 	FAT[0][cluster] = j;
 	Fat32_SaveFat(0);
 	cluster=j;
-	Fat32_LoadCluster(cluster, ClusterData);
+	LoadCluster(cluster, ClusterData);
 	i = 0;
 	ClusterData[DIRECTORY_RECORD_SIZE]=0;
 write:
@@ -361,7 +361,7 @@ write:
 	*(uint16*)(ClusterData + i*DIRECTORY_RECORD_SIZE + 0x14) = (uint16)(mem->firstCluster>>16);
 	*(uint16*)(ClusterData + i*DIRECTORY_RECORD_SIZE + 0x1A) = (uint16)(mem->firstCluster);
 	*(uint32*)(ClusterData + i*DIRECTORY_RECORD_SIZE + 0x1C) = (uint32)(mem->fileSize);
-	Fat32_SaveCluster( cluster, ClusterData);
+	SaveCluster( cluster, ClusterData);
 	return true;;
 }
 

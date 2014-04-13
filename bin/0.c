@@ -1,6 +1,5 @@
+#include "cnos.h"
 
-void qwe(){
-}
 int main(){
-	qwe();	
+	printf("qwe %s qwesd %d\n", "qfdf", 12322);
 }

@@ -63,12 +63,12 @@ bool Fat32_Init( uint32 volumeId_sector ){
 	return true;
 }
 
-uint32 Fat32_NextCluster( uint32 cluster ){
+uint32 NextCluster( uint32 cluster ){
 	return FAT[0][cluster];
 }
-bool Fat32_LoadCluster( uint32 cluster, void *data ){
+bool LoadCluster( uint32 cluster, void *data ){
 	return ATAPIO_Read( CurrentParams.ClustersBegin + (cluster-2) * CurrentParams.SectorsPerCluster, CurrentParams.SectorsPerCluster, master, data);
 }
-bool Fat32_SaveCluster( uint32 cluster, void *data ){
+bool SaveCluster( uint32 cluster, void *data ){
 	return ATAPIO_Write( CurrentParams.ClustersBegin + (cluster-2) * CurrentParams.SectorsPerCluster, CurrentParams.SectorsPerCluster, master, data);
 }
