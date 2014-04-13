@@ -1,0 +1,5 @@
+#!/bin/bash
+ls ./scripts
+./scripts/mklinkH.sh
+
+./scripts/compile.sh bin/0.c

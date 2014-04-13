@@ -29,21 +29,25 @@ int PointerToTableIndex( void *pointer );
 // Инициализация таблицы памяти
 void InitMemory(){
 	for( int i=0; i<TABLE_SIZE; ++i)
-		MEMORY_TABLE_BASE[i]=0x0; // Все свободно
+		MEMORY_TABLE_BASE[i]=FREE;
 }
 // Выделение памяти
 void* Allocate( int size ){
 	int spaceFirstBlockId = SearchFreeSegment( size );
-	if( spaceFirstBlockId == NO_SUITABLE_SEGMENT )
+	if( spaceFirstBlockId == NO_SUITABLE_SEGMENT ){
+		printf("Error. Unable to allocate memory.\n");
 		return (void*)0x0;
+	}
 	SetBlocksSegmentBusy( spaceFirstBlockId, size );
 	return TableIndexToPointer(spaceFirstBlockId);
 }
 // Освобождение памяти
 bool Free( void *pointer, int size ){
 	int tableIndex = PointerToTableIndex( pointer );
-	if( tableIndex == NO_SUITABLE_BLOCK )
+	if( tableIndex == NO_SUITABLE_BLOCK ){
+		printf("Error. Current memory segment cannoot be free.\n");
 		return false;
+	}
 	SetBlocksSegmentFree( tableIndex, size);
 	return true;
 }
