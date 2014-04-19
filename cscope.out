@@ -1,4 +1,4 @@
-cscope 15 $HOME/0/cnos               0000055556
+cscope 15 $HOME/0/cnos               0000051031
 	@bin/0.c
 
 2 
@@ -157,21 +157,27 @@ cscope 15 $HOME/0/cnos               0000055556
 
 	)
 
-28 
+28 
+	#SECTOR_SIZE
+ 512
+
+	)
+
+30 
 	$ATAPIO_PﬁlSètus
 (){
 
-29 
+31 
 uöt8
  
 °©us
 ;
 
-30 
+32 
 åue
 ){
 
-31 
+33 
 °©us
  = 
 	`öb
@@ -181,7 +187,7 @@ ATAPIO_BASE_ADDR
 ATAPIO_PORT_OFFSET_REGULARSTATUS
 );
 
-32 if–(
+34 if–(
 °©us
  & 
 ATAPIO_STATUSFLAG_BSY
@@ -189,35 +195,237 @@ ATAPIO_STATUSFLAG_BSY
 ATAPIO_STATUSFLAG_DRQ
 )!=0 )
 
-33  
-ATAPIO_DONE
-;
-
-34 if–(
-°©us
- & 
-ATAPIO_STATUSFLAG_ERR
-) )
-
 35  
-ATAPIO_ERROR
+ATAPIO_DONE
 ;
 
 36 if–(
 °©us
  & 
-ATAPIO_STATUSFLAG_DF
+ATAPIO_STATUSFLAG_ERR
 ) )
 
 37  
+ATAPIO_ERROR
+;
+
+38 if–(
+°©us
+ & 
+ATAPIO_STATUSFLAG_DF
+) )
+
+39  
 ATAPIO_FAULT
 ;
 
-39 
+41 
 	}
 }
 
-41 
+43 
+ölöe
+ 
+	$Sñe˘DiskAndSe˘‹
+–
+drive
+ 
+Drive
+,
+uöt32
+ 
+addr
+){
+
+44 
+	`outb
+–
+ATAPIO_BASE_ADDR
+ + 
+ATAPIO_PORT_OFFSET_HEAD
+, 0xE0 | ((
+uöt8
+)
+Drive
+<<4Ë| ((
+addr
+>>24)&0xf) );
+
+45 
+	`outb
+–
+ATAPIO_BASE_ADDR
+ + 
+ATAPIO_PORT_OFFSET_LBA_0_7
+, (
+uöt8
+)
+addr
+);
+
+46 
+	`outb
+–
+ATAPIO_BASE_ADDR
+ + 
+ATAPIO_PORT_OFFSET_LBA_8_15
+, (
+uöt8
+)(
+addr
+>>8));
+
+47 
+	`outb
+–
+ATAPIO_BASE_ADDR
+ + 
+ATAPIO_PORT_OFFSET_LBA_16_23
+, (
+uöt8
+)(
+addr
+>>16));
+
+48 
+	}
+}
+
+49 
+ölöe
+ 
+	$SídRódComm™d
+(){
+
+50 
+	`outb
+–
+ATAPIO_BASE_ADDR
+ + 
+ATAPIO_PORT_OFFSET_COMMAND
+, 
+ATAPIO_COMMAND_READ
+);
+
+51 
+	}
+}
+
+52 
+ölöe
+ 
+	$SídWrôeComm™d
+(){
+
+53 
+	`outb
+–
+ATAPIO_BASE_ADDR
+ + 
+ATAPIO_PORT_OFFSET_COMMAND
+, 
+ATAPIO_COMMAND_WRITE
+);
+
+54 
+	}
+}
+
+55 
+ölöe
+ 
+	$Pª∑ªAè
+(){
+
+56 
+	`outb
+–
+ATAPIO_BASE_ADDR
+ + 
+ATAPIO_PORT_OFFSET_FEATURES
+, 
+NULL
+ );
+
+57 
+	}
+}
+
+58 
+ölöe
+ 
+	$SëCou¡OfU£bÀSe˘‹s
+(
+uöt8
+ 
+cou¡
+){
+
+59 
+	`outb
+–
+ATAPIO_BASE_ADDR
+ + 
+ATAPIO_PORT_OFFSET_SECTORCOUNT
+, 
+cou¡
+ );
+
+60 
+	}
+}
+
+63 
+ölöe
+ 
+	$RódSe˘‹
+–
+uöt16
+* 
+d°
+ ){
+
+64 
+	`ªpInsw
+–
+ATAPIO_BASE_ADDR
+ + 
+ATAPIO_PORT_OFFSET_DATA
+, 
+d°
+, 0x100);
+
+65 
+	}
+}
+
+67 
+ölöe
+ 
+	$WrôeSe˘‹
+–
+uöt16
+* 
+§c
+ ){
+
+68 
+asm
+ volatile(
+
+74 :: "Nd"(
+ATAPIO_BASE_ADDR
++
+ATAPIO_PORT_OFFSET_DATA
+),"S"(
+§c
+), "c"(0x100)
+
+76 
+	}
+}
+
+79 
 	$ATAPIO_Ród
 –
 uöt32
@@ -235,143 +443,77 @@ Drive
 d°
 ){
 
-42 
-uöt16
- * 
-D°
- = 
-d°
-;
+80 
+	`Pª∑ªAè
+();
 
-43 
-	`outb
-–
-ATAPIO_BASE_ADDR
- + 
-ATAPIO_PORT_OFFSET_HEAD
-, 0xE0 | ((
-uöt8
-)
-Drive
-<<4Ë| ((
-addr
->>24)&0xf) );
-
-44 
-	`outb
-–
-ATAPIO_BASE_ADDR
- + 
-ATAPIO_PORT_OFFSET_DATA
-, 
-NULL
- );
-
-45 
-	`outb
-–
-ATAPIO_BASE_ADDR
- + 
-ATAPIO_PORT_OFFSET_SECTORCOUNT
-, 
+81 
+	`SëCou¡OfU£bÀSe˘‹s
+(
 cou¡
+);
+
+82 
+	`Sñe˘DiskAndSe˘‹
+–
+Drive
+,
+addr
  );
 
-46 
-	`outb
-–
-ATAPIO_BASE_ADDR
- + 
-ATAPIO_PORT_OFFSET_LBA_0_7
-, (
-uöt8
-)
-addr
-);
+83 
+	`SídRódComm™d
+();
 
-47 
-	`outb
-–
-ATAPIO_BASE_ADDR
- + 
-ATAPIO_PORT_OFFSET_LBA_8_15
-, (
-uöt8
-)(
-addr
->>8));
-
-48 
-	`outb
-–
-ATAPIO_BASE_ADDR
- + 
-ATAPIO_PORT_OFFSET_LBA_16_23
-, (
-uöt8
-)(
-addr
->>16));
-
-49 
-	`outb
-–
-ATAPIO_BASE_ADDR
- + 
-ATAPIO_PORT_OFFSET_COMMAND
-, 
-ATAPIO_COMMAND_READ
-);
-
-50 
+84 
 °©us
 , 
 i
 ;
 
-51 
+85 
 i
 =0;i<
 cou¡
 ;++i){
 
-52 
+86 
 °©us
 =
 	`ATAPIO_PﬁlSètus
 ();
 
-53 if–
+87 if–
 °©us
 !=
 ATAPIO_DONE
  )
 
-54  
+88  
 °©us
 ;
 
-55 
-	`ªpInsw
-–
-ATAPIO_BASE_ADDR
- + 
-ATAPIO_PORT_OFFSET_DATA
-, 
-D°
-+
+89 
+	`RódSe˘‹
+––(
+uöt16
+*)
+d°
+ + (
+SECTOR_SIZE
+/(uöt16))*
 i
-*0x100, 0x100);
+ ) );
 
-57  
+91  
 ATAPIO_DONE
 ;
 
-58 
+92 
 	}
 }
 
-60 
+94 
 	$ATAPIO_Wrôe
 –
 uöt32
@@ -389,141 +531,75 @@ Drive
 §c
 ){
 
-61 c⁄° 
-uöt16
- * 
-Src
- = 
-§c
-;
+95 
+	`Pª∑ªAè
+();
 
-62 
-	`outb
-–
-ATAPIO_BASE_ADDR
- + 
-ATAPIO_PORT_OFFSET_HEAD
-, 0xE0 | ((
-uöt8
-)
-Drive
-<<4Ë| ((
-addr
->>24)&0xf) );
-
-63 
-	`outb
-–
-ATAPIO_BASE_ADDR
- + 
-ATAPIO_PORT_OFFSET_DATA
-, 
-NULL
- );
-
-64 
-	`outb
-–
-ATAPIO_BASE_ADDR
- + 
-ATAPIO_PORT_OFFSET_SECTORCOUNT
-, 
+96 
+	`SëCou¡OfU£bÀSe˘‹s
+(
 cou¡
+);
+
+97 
+	`Sñe˘DiskAndSe˘‹
+–
+Drive
+,
+addr
  );
 
-65 
-	`outb
+98 
+	`SídWrôeComm™d
 –
-ATAPIO_BASE_ADDR
- + 
-ATAPIO_PORT_OFFSET_LBA_0_7
-, (
-uöt8
-)
 addr
-);
+ );
 
-66 
-	`outb
-–
-ATAPIO_BASE_ADDR
- + 
-ATAPIO_PORT_OFFSET_LBA_8_15
-, (
-uöt8
-)(
-addr
->>8));
-
-67 
-	`outb
-–
-ATAPIO_BASE_ADDR
- + 
-ATAPIO_PORT_OFFSET_LBA_16_23
-, (
-uöt8
-)(
-addr
->>16));
-
-68 
-	`outb
-–
-ATAPIO_BASE_ADDR
- + 
-ATAPIO_PORT_OFFSET_COMMAND
-, 
-ATAPIO_COMMAND_WRITE
-);
-
-69 
+99 
 °©us
 , 
 i
 ;
 
-70  
+100  
 i
 =0; i<
 cou¡
 ; ++i){
 
-71 
+101 
 °©us
 =
 	`ATAPIO_PﬁlSètus
 ();
 
-72 if–
+102 if–
 °©us
 !=
 ATAPIO_DONE
  )
 
-73  
+103  
 °©us
 ;
 
-74 
-asm
- volatile(
-
-80 :: "Nd"(
-ATAPIO_BASE_ADDR
-+
-ATAPIO_PORT_OFFSET_DATA
-),"S"(
-Src
-+
+104 
+	`WrôeSe˘‹
+–(
+uöt16
+*)
+§c
+ + (
+SECTOR_SIZE
+/(uöt16))*
 i
-*0x100), "c"(0x100)
+ );
 
-83  
+106  
 ATAPIO_DONE
 ;
 
-84 
+107 
 	}
 }
 
@@ -3227,1044 +3303,6 @@ uöt8
 Clu°îD©a
 ;
 
-	@common/fs/fat32_old.c
-
-1 
-	~<Át32.h
->
-
-2 
-	~<mem‹y.h
->
-
-3 
-	~<©a.h
->
-
-4 
-	~<°rög_us.h
->
-
-6 
-	#PARTITION_BASE
- 0x1BE
-
-	)
-
-7 
-	#PARTITION_SIZE
- 0x10
-
-	)
-
-9 
-	#PR_TYPE_OFFSET
- 0x4
-
-	)
-
-10 
-	#PR_LBABEGIN_OFFSET
- 0x8
-
-	)
-
-12 
-	#FS_FAT32_LBA
- 0x0C
-
-	)
-
-14 
-	#BOOTSECTOR
- 
-FAT32VﬁumeId
-
-
-	)
-
-16 
-	#FS_VOLUMEID_BYTE_PER_SECTOR_OFFSET
- 0xB
-
-	)
-
-17 
-	#FS_VOLUMEID_SECTOR_PER_CLUSTER_OFFSET
- 0xD
-
-	)
-
-18 
-	#FS_VOLUMEID_NUMBER_OF_REVERSED_SECTORS_OFFSET
- 0xE
-
-	)
-
-19 
-	#FS_VOLUMEID_NUMBER_OF_FATS_OFFSET
- 0x10
-
-	)
-
-20 
-	#FS_VOLUMEID_SECTORS_PER_FAT_OFFSET
- 0x24
-
-	)
-
-21 
-	#FS_VOLUMEID_ROOT_DIRECTORY_FIRST_CLUSTER_OFFSET
- 0x2C
-
-	)
-
-22 
-	#FS_VOLUMEID_SIGNATURE_OFFSET
- 0x1FE
-
-	)
-
-24 
-	#FAT_CLUSTER_ERROR
- 1
-
-	)
-
-25 
-	#FAT_FILE_END
- 0xffffffff
-
-	)
-
-26 
-	#FAT_CLUSTER_FREE
- 0x0
-
-	)
-
-29 
-uöt32
- 
-	gFS_LBABegöSe˘‹
-[8];
-
-30 
-uöt8
- 
-	gFS_Ty≥
-[8];
-
-31 
-uöt8
- 
-	gFAT32VﬁumeId
-[512];
-
-34 
-uöt8
- 
-	gF©32CuºítFûeSy°em
-=0;
-
-35 
-uöt32
- 
-	gF©32Cuºít_BegöF©
-;
-
-36 
-uöt32
- 
-	gF©32Cuºít_Clu°îBegöLBA
-;
-
-37 
-uöt8
- 
-	gF©32Cuºít_Se˘‹PîClu°î
-;
-
-38 
-uöt32
- 
-	gF©32Cuºít_Se˘‹PîF©
-;
-
-39 
-uöt32
- 
-	gF©32Cuºít_RoŸDúec‹yClu°î
-;
-
-41 
-uöt32
- 
-	gCuºítClu°î
-;
-
-42 
-uöt32
- 
-	gCuºítDúe˘‹yFú°Clu°î
-;
-
-43 
-boﬁ
- 
-	gªloˇãFœg
-=
-åue
-;
-
-45 
-	#BUFFER_COUNT
- 2
-
-	)
-
-46 
-	#BUFFER_FAT1
- 0
-
-	)
-
-47 
-	#BUFFER_CLUSTER
- 1
-
-	)
-
-48 * 
-	gbuf„r
-[2];
-
-49 
-	gOldBuf„rSize
-[2];
-
-51 
-	$Pª∑ªBuf„rs
-(){
-
-52  
-i
-=0; i<
-BUFFER_COUNT
-; ++i)
-
-53 
-buf„r
-[
-i
-] = 0;
-
-54 
-	}
-}
-
-55 
-	$RñﬂdBuf„rs
-(){
-
-56  
-i
-=0; i<
-BUFFER_COUNT
-; ++i){
-
-57 if–
-buf„r
-[
-i
-] != 0 )
-
-58 
-	`Fªe
-–
-buf„r
-[
-i
-], 
-OldBuf„rSize
-[i]);
-
-59 
-size
-;
-
-60  
-i
- ){
-
-61 
-BUFFER_FAT1
-:
-
-62 
-size
-=
-F©32Cuºít_Se˘‹PîF©
-;
-
-64 
-BUFFER_CLUSTER
-:
-
-65 
-size
-=
-F©32Cuºít_Se˘‹PîClu°î
-;
-
-68 
-buf„r
-[
-i
-] = 
-	`AŒoˇã
-–
-size
- );
-
-69 
-OldBuf„rSize
-[
-i
-] = 
-size
-;
-
-71 
-	}
-}
-
-75 
-	$LﬂdP¨tôi⁄s
-(){
-
-76 
-	`ATAPIO_Ród
-(0,1,
-ma°î
-,
-FAT32VﬁumeId
-);
-
-77 
-i
-=0;i<4;++i){
-
-78 
-FS_Ty≥
-[
-i
-] = 
-BOOTSECTOR
-[ 
-PARTITION_BASE
- + i*
-PARTITION_SIZE
- + 
-PR_TYPE_OFFSET
- ];
-
-79 
-FS_LBABegöSe˘‹
-[
-i
-] = *(
-uöt32
-*)(
-BOOTSECTOR
- + 
-PARTITION_BASE
- + i*
-PARTITION_SIZE
- + 
-PR_LBABEGIN_OFFSET
-);
-
-81 
-	`Pª∑ªBuf„rs
-();
-
-82 
-	}
-}
-
-85 
-boﬁ
- 
-	$LﬂdFAT
-(
-uöt8
- 
-id
-, *
-Át
-){
-
-86 if(
-id
-!=0)
-
-87 
-id
-=1;
-
-88  
-	`ATAPIO_Ród
-–
-F©32Cuºít_BegöF©
- + 
-id
-*
-F©32Cuºít_Se˘‹PîF©
-, F©32Cuºít_Se˘‹PîF©,
-ma°î
-, 
-Át
-);
-
-89 
-	}
-}
-
-91 
-boﬁ
- 
-	$SaveF©
-(
-uöt8
- 
-id
-, *
-Át
-){
-
-92 if(
-id
-!=0)
-
-93 
-id
-=1;
-
-94  
-	`ATAPIO_Wrôe
-–
-F©32Cuºít_BegöF©
- + 
-id
-*
-F©32Cuºít_Se˘‹PîF©
-, F©32Cuºít_Se˘‹PîF©,
-ma°î
-, 
-Át
-);
-
-95 
-	}
-}
-
-98 
-boﬁ
- 
-	$Sñe˘P¨tôi⁄
-(
-uöt8
- 
-id
-){
-
-99 
-	`ATAPIO_Ród
-–
-FS_LBABegöSe˘‹
-[
-id
-], 1, (
-drive
-)(id/4), 
-FAT32VﬁumeId
- );
-
-100 if–*(
-uöt16
-*)(
-FAT32VﬁumeId
- + 
-FS_VOLUMEID_BYTE_PER_SECTOR_OFFSET
-Ë!
-SECTOR_SIZE
- ){
-
-101 
-F©32CuºítFûeSy°em
-=0;
-
-102  
-Ál£
-;
-
-104 if–*(
-uöt8
-*)(
-FAT32VﬁumeId
- + 
-FS_VOLUMEID_NUMBER_OF_FATS_OFFSET
-) != 2 ){
-
-105 
-F©32CuºítFûeSy°em
-=0;
-
-106  
-Ál£
-;
-
-108 if–*(
-uöt16
-*)(
-FAT32VﬁumeId
- + 
-FS_VOLUMEID_SIGNATURE_OFFSET
-) != 0xAA55 ){
-
-109 
-F©32CuºítFûeSy°em
-=0;
-
-110  
-Ál£
-;
-
-112 
-F©32Cuºít_Se˘‹PîF©
- = *(
-uöt32
-*)(
-FAT32VﬁumeId
- + 
-FS_VOLUMEID_SECTORS_PER_FAT_OFFSET
-);
-
-113 
-F©32CuºítFûeSy°em
-=0x80 | 
-id
-;
-
-114 
-F©32Cuºít_BegöF©
- = 
-FS_LBABegöSe˘‹
-[
-id
-] + *(
-uöt16
-*)(
-FAT32VﬁumeId
- + 
-FS_VOLUMEID_NUMBER_OF_REVERSED_SECTORS_OFFSET
-);
-
-115 
-F©32Cuºít_Clu°îBegöLBA
- = 
-F©32Cuºít_BegöF©
- + 
-FAT32VﬁumeId
-[ 
-FS_VOLUMEID_NUMBER_OF_FATS_OFFSET
- ]*
-F©32Cuºít_Se˘‹PîF©
-;
-
-116 
-F©32Cuºít_Se˘‹PîClu°î
- = 
-FAT32VﬁumeId
-[ 
-FS_VOLUMEID_SECTOR_PER_CLUSTER_OFFSET
- ];
-
-117 
-F©32Cuºít_RoŸDúec‹yClu°î
- = *(
-uöt32
-*)(
-FAT32VﬁumeId
- + 
-FS_VOLUMEID_ROOT_DIRECTORY_FIRST_CLUSTER_OFFSET
-);
-
-118 
-CuºítClu°î
- = 
-F©32Cuºít_RoŸDúec‹yClu°î
-;
-
-119 
-	`RñﬂdBuf„rs
-();
-
-120 
-	`LﬂdFAT
-–0, 
-buf„r
-[
-BUFFER_FAT1
-] );
-
-121  
-åue
-;
-
-122 
-	}
-}
-
-126 
-uöt32
- 
-	$NextClu°î
-(
-uöt32
- 
-˛u°î
-){
-
-127 if–
-˛u°î
- < 2 || clu°î > 
-F©32Cuºít_Se˘‹PîF©
-*128)
-
-128  
-FAT_CLUSTER_ERROR
-;
-
-129  *((
-uöt32
-*)
-buf„r
-[
-BUFFER_FAT1
-] + 
-˛u°î
-);
-
-130 
-	}
-}
-
-133 
-ölöe
- 
-boﬁ
- 
-	$LﬂdClu°î
-(
-uöt32
- 
-id
-, *
-d©a
-){
-
-134 
-uöt32
- 
-£˘‹s_°¨t
- = 
-F©32Cuºít_Clu°îBegöLBA
- + (
-id
--2Ë* 
-F©32Cuºít_Se˘‹PîClu°î
-;
-
-135 if–(
-£˘‹s_°¨t
->>28) != 0 ){
-
-136  
-Ál£
-;
-
-138  
-	`ATAPIO_Ród
-–
-£˘‹s_°¨t
-, 
-F©32Cuºít_Se˘‹PîClu°î
-, 
-ma°î
-, 
-d©a
-);
-
-139 
-	}
-}
-
-141 
-ölöe
- 
-boﬁ
- 
-	$SaveClu°î
-(
-uöt32
- 
-id
-, *
-d©a
-){
-
-142 
-uöt32
- 
-£˘‹s_°¨t
- = 
-F©32Cuºít_Clu°îBegöLBA
- + (
-id
--2Ë* 
-F©32Cuºít_Se˘‹PîClu°î
-;
-
-143 if–(
-£˘‹s_°¨t
->>28) != 0 ){
-
-144  
-Ál£
-;
-
-146  
-	`ATAPIO_Wrôe
-–
-£˘‹s_°¨t
-, 
-F©32Cuºít_Se˘‹PîClu°î
-, 
-ma°î
-, 
-d©a
-);
-
-147 
-	}
-}
-
-149 
-boﬁ
- 
-	$GëF©32DúMembî
-–*
-˛u°î
-, 
-uöt32
- 
-fûeId
-, 
-F©32_DúMembî
- *
-ªzu…
- ){
-
-150 
-i
-=0;i<11;++i){
-
-151 
-ªzu…
-->
-fûíame
-[
-i
-] = *(*)(
-˛u°î
- + 32*
-fûeId
- + i);
-
-153 
-ªzu…
-->
-©åibByã
- = *(
-uöt8
-*)(
-˛u°î
- + 32*
-fûeId
- + 0xb);
-
-155 
-ªzu…
-->
-fú°Clu°î
- = (
-uöt32
-Ë*(
-uöt16
-*)(
-˛u°î
- + 32*
-fûeId
- +0x14);
-
-156 
-ªzu…
-->
-fú°Clu°î
- = (ªzu…->fú°Clu°î<<16Ë| (
-uöt32
-)*(
-uöt16
-*)(
-˛u°î
- + 32*
-fûeId
- + 0x1A);
-
-157 
-ªzu…
-->
-fûeSize
- = *(
-uöt32
-*)(
-˛u°î
- + 32*
-fûeId
- + 0x1C);
-
-158 
-	`Fªe
-(
-˛u°î
-, 
-SECTOR_SIZE
-*
-F©32Cuºít_Se˘‹PîClu°î
-);
-
-159  
-åue
-;
-
-160 
-	}
-}
-
-162 
-boﬁ
- 
-	$SórchF©32DúMembî
-–
-uöt32
- 
-dúClu°î
-, c⁄° * 
-fûíame
-, 
-F©32_DúMembî
- *
-ªzu…
-){
-
-163 
-	`Sñe˘Dú
-–
-dúClu°î
- );
-
-167 
-	}
-}
-
-170 
-	$Sñe˘Dú
-–
-uöt32
- 
-dúFú°Clu°î
- ){
-
-171 
-CuºítClu°î
- = 
-CuºítDúe˘‹yFú°Clu°î
- = 
-dúFú°Clu°î
-;
-
-172 
-ªloˇãFœg
-=
-åue
-;
-
-173 
-	}
-}
-
-175 
-boﬁ
- 
-	$NextDúFûeMembî
-(
-F©32_DúMembî
- *
-ªzu…
-){
-
-176 
-pos
-;
-
-177 if–
-ªloˇãFœg
- ){
-
-178 
-pos
-=0;
-
-179 
-	`LﬂdClu°î
-–
-CuºítClu°î
-, 
-buf„r
-[
-BUFFER_CLUSTER
-]);
-
-180 
-ªloˇãFœg
- = 
-Ál£
-;
-
-182 if–
-pos
- =
-SECTOR_SIZE
-*
-F©32Cuºít_Se˘‹PîClu°î
-/32 ){
-
-183 
-CuºítClu°î
- = 
-	`NextClu°î
-( CurrentCluster );
-
-184 
-pos
-=0;
-
-185 
-	`LﬂdClu°î
-–
-CuºítClu°î
-, 
-buf„r
-[
-BUFFER_CLUSTER
-]);
-
-187 
-boﬁ
- 
-s
- = 
-	`GëF©32DúMembî
-–
-buf„r
-[
-BUFFER_CLUSTER
-], 
-pos
-, 
-ªzu…
-);
-
-188 if–!
-s
- )
-
-189  
-Ál£
-;
-
-190 if–
-ªzu…
-->
-fûíame
-[0] == 0 )
-
-191  
-Ál£
-;
-
-192 if–
-ªzu…
-->
-©åib
-.
-ªad⁄ly
- &&Ñezu…->©åib->
-hiddí
- &&Ñezu…->©åib.
-sy°em
- &&Ñezu…->©åib.
-vﬁumeId
- ){
-
-193 
-pos
-++;
-
-194  
-	`NextDúFûeMembî
-–
-ªzu…
- );
-
-196 
-pos
-++;
-
-197  
-åue
-;
-
-198 
-	}
-}
-
-200 
-	$GŸI¡oRoŸ
-(){
-
-201 
-	`Sñe˘Dú
-–
-F©32Cuºít_RoŸDúec‹yClu°î
- );
-
-202 
-	}
-}
-
 	@common/fs/fs.c
 
 1 
@@ -4399,7 +3437,7 @@ id
 	~<io.h
 >
 
-3 
+7 
 uöt8
  
 	gX
@@ -4407,23 +3445,23 @@ uöt8
 	gY
 =0;
 
-4 
+8 
 uöt8
  
 	gCuºítCﬁ‹
 =0x07;
 
-5 
+9 
 uöt8
  
 	gèb°›
 =0x4;
 
-7 
+11 
 	$CÀ¨S¸ìn
 (){
 
-8 
+12 
 i
 =0;i<
 SCREEN_WIDTH
@@ -4431,33 +3469,33 @@ SCREEN_WIDTH
 SCREEN_HEIGHT
 ;++i)
 
-9 
+13 
 VIDEOBUFFER
 [
 i
 ]=0;
 
-10 
+14 
 X
 =
 Y
 =0;
 
-11 
+15 
 	}
 }
 
-13 
+17 
 	$putch¨
 –
 a
 ){
 
-14  
+18  
 a
  ){
 
-17 
+21 
 	`PUTC_POS
 (' ',
 CuºítCﬁ‹
@@ -4467,25 +3505,25 @@ X
 Y
 );
 
-18 ++
+22 ++
 X
 ;
 
-19 } 
+23 } 
 X
 %
 èb°›
  );
 
-22 if(
+26 if(
 X
 >0){
 
-23 --
+27 --
 X
 ;
 
-24 
+28 
 	`PUTC_POS
 (' ',
 CuºítCﬁ‹
@@ -4495,15 +3533,15 @@ X
 Y
 );
 
-28 ++
+32 ++
 Y
 ;
 
-30 
+34 
 X
 =0;
 
-33 
+37 
 	`PUTC_POS
 (
 a
@@ -4515,108 +3553,84 @@ X
 Y
 );
 
-34 ++
+38 ++
 X
 ;
 
-36 if–
+40 if–
 X
 >=
 SCREEN_WIDTH
  ){
 
-37 ++
+41 ++
 Y
 ;
 
-38 
+42 
 X
 =0;
 
-40 if–
+44 if–
 Y
 >=
 SCREEN_HEIGHT
  )
 
-41 
+45 
 	`CÀ¨S¸ìn
 ();
 
-42 
+46 
 	}
 }
 
-44 
+48 
 	$¥ötf_d
 (
 d
 ){
 
-45 
+49 
 °r
 [10];
 
-46 
+50 
 i
 =0;
 
-47 
+51 
 d
 ){
 
-48 
+52 
 °r
 [
 i
 ]=
 d
-%10;
+%10+0x30;
 
-49 
+53 
 d
 /=10;
 
-50 ++
+54 ++
 i
 ;
 
-52 
+56 
 i
 >0){
 
-53 --
+57 --
 i
 ;
 
-54 
+58 
 	`putch¨
 (
 °r
-[
-i
-]);
-
-56 
-	}
-}
-
-57 
-	$¥ötf_s
-(c⁄° *
-s
-){
-
-58 
-i
-=0;
-s
-[i];++i)
-
-59 
-	`putch¨
-(
-s
 [
 i
 ]);
@@ -4625,81 +3639,105 @@ i
 	}
 }
 
-62 
+61 
+	$¥ötf_s
+(c⁄° *
+s
+){
+
+62 
+i
+=0;
+s
+[i];++i)
+
+63 
+	`putch¨
+(
+s
+[
+i
+]);
+
+64 
+	}
+}
+
+66 
 	$¥ötf
 –c⁄° *
 f‹m©
 , ...){
 
-63 
+67 
 cou¡
 =0;
 
-64 *
+68 *
 p
  = (*)&
 f‹m©
 +(*);
 
-65 
+69 
 i
 =0; 
 f‹m©
 [i]; ++i){
 
-66 if–
+70 if–
 f‹m©
 [
 i
 ]=='%' ){
 
-67 
+71 
 i
 ++;
 
-68 
+72 
 f‹m©
 [
 i
 ]){
 
-70  
+74  
 cou¡
 ;
 
-72 
+76 
 	`putch¨
 ('%');
 
-75 
+79 
 	`¥ötf_d
 –*(*)
 p
 );
 
-76 
+80 
 p
 +=();
 
-77 
+81 
 cou¡
 ++;
 
-80 
+84 
 	`¥ötf_s
 –*(**)(
 p
 ) );
 
-81 
+85 
 p
 +=(*);
 
-82 
+86 
 cou¡
 ++;
 
-85 
+89 
 	`putch¨
 (
 f‹m©
@@ -4707,7 +3745,7 @@ f‹m©
 i
 ]);
 
-88 
+92 
 	`putch¨
 (
 f‹m©
@@ -4715,19 +3753,19 @@ f‹m©
 i
 ]);
 
-91  
+95  
 cou¡
 ;
 
-92 
+96 
 	}
 }
 
-94 
+102 
 	$gëch¨
 (){
 
-96 
+104 
 	}
 }
 
@@ -4752,7 +3790,7 @@ KB
 	)
 
 6 
-	#BASE
+	#MEMORY_TABLE_BASE
  ((
 uöt8
 *)0x0)
@@ -4760,13 +3798,13 @@ uöt8
 	)
 
 7 
-	#FROM
+	#AVAILABLE_MEMORY_BASE
  0x150000
 
 	)
 
 8 
-	#SIZE
+	#AVAILABLE_MEMORY_SIZE
  (80*
 MB
 /
@@ -4774,136 +3812,144 @@ BLOCK_SIZE
 )
 
 9 
-	#TABLESIZE
+	#TABLE_SIZE
  (
-SIZE
+AVAILABLE_MEMORY_SIZE
 /8)
 
 	)
 
-11 
-	$InôMem‹yTabÀ
-(){
+11 
+	#FREE
+ 0
 
-12  
-i
-=0; i<
-TABLESIZE
-; ++i)
+	)
 
-13 
-BASE
-[
-i
-]=0xff;
+12 
+	#BUSY
+ 1
 
-14 
-	}
-}
+	)
 
-16 
+14 
+	#NO_SUITABLE_BLOCK
+ -1
+
+	)
+
+15 
+	#NO_SUITABLE_SEGMENT
+ -1
+
+	)
+
+17 
 boﬁ
  
-	$IsBlockFªe
+IsBlockFªe
 –
 id
- ){
+ );
 
-17  
-BASE
-[
+18 
+SëBlockSèãFªe
+–
 id
-/8]&(1<<(id%8));
-
-18 
-	}
-}
+);
 
 19 
-	$InvBlockSèã
+SëBlockSèãBusy
 –
 id
- ){
+ );
 
-20 
-BASE
+20 
+SórchFªeSegmít
+(
+size
+);
+
+21 
+SëBlocksSegmítFªe
+(
+fú°Id
+, 
+cou¡
+);
+
+22 
+SëBlocksSegmítBusy
+(
+fú°Id
+, 
+cou¡
+);
+
+23 * 
+TabÀIndexToPoöãr
+(
+ödex
+);
+
+24 
+PoöãrToTabÀIndex
+–*
+poöãr
+ );
+
+30 
+	$InôMem‹y
+(){
+
+31  
+i
+=0; i<
+TABLE_SIZE
+; ++i)
+
+32 
+MEMORY_TABLE_BASE
 [
-id
-/8] ^= (1<<(id%8));
+i
+]=0x0;
 
-21 
+33 
 	}
 }
 
-23 * 
+35 * 
 	$AŒoˇã
 –
 size
  ){
 
-25 
-i
-,
-j
-;
+36 
+•a˚Fú°BlockId
+ = 
+	`SórchFªeSegmít
+–
+size
+ );
 
-26 
-fsize
-=0;
-
-27  
-i
-=0; i<
-SIZE
-; ++i){
-
-28 if–
-	`IsBlockFªe
-(
-i
-) ){
-
-29 
-fsize
-++;
-
-30 if–
-fsize
+37 if–
+•a˚Fú°BlockId
  =
-size
- ){
+NO_SUITABLE_SEGMENT
+ )
 
-32 
-i
--=
+39 
+	`SëBlocksSegmítBusy
+–
+•a˚Fú°BlockId
+, 
 size
--1;
+ );
 
-33 
-j
-=0;j<
-size
-;++j)
-
-34 
-	`InvBlockSèã
+40  
+	`TabÀIndexToPoöãr
 (
-i
-+
-j
+•a˚Fú°BlockId
 );
-
-35  (*)(
-FROM
-+
-BLOCK_SIZE
-*
-i
-);
-
-38 
-fsize
-=0;
 
 41 
 	}
@@ -4914,25 +3960,23 @@ boﬁ
  
 	$Fªe
 –*
-block
+poöãr
 , 
 size
  ){
 
-44 
-uöt32
- 
-i
- = (uöt32)
-block
- - 
-FROM
-;
+44 
+èbÀIndex
+ = 
+	`PoöãrToTabÀIndex
+–
+poöãr
+ );
 
 45 if–
-i
- % 
-BLOCK_SIZE
+èbÀIndex
+ =
+NO_SUITABLE_BLOCK
  )
 
 46  
@@ -4940,70 +3984,246 @@ BLOCK_SIZE
 ;
 
 47 
-i
-/=
-BLOCK_SIZE
-;
-
-48 if–
-i
->=
-SIZE
- )
-
-49  
-Ál£
-;
-
-50 
-uöt32
- 
-to
-=
-i
-+
+	`SëBlocksSegmítFªe
+–
+èbÀIndex
+, 
 size
-;
-
-51 
-i
-<
-to
-){
-
-52 if–
-	`IsBlockFªe
-(
-i
-) )
-
-53  
-Ál£
-;
-
-54 
-i
-++;
-
-56 
-i
--=
-size
-;i<
-to
-;++i)
-
-57 
-	`InvBlockSèã
-(
-i
 );
 
-58  
+48  
 åue
 ;
 
+49 
+	}
+}
+
+55 
+	$SórchFªeSegmít
+(
+size
+){
+
+56 
+i
+, 
+foundedFªeSegmítSize
+;
+
+57  
+i
+=0; i<
+AVAILABLE_MEMORY_SIZE
+; ++i){
+
+58 if–
+	`IsBlockFªe
+(
+i
+) ){
+
 59 
+foundedFªeSegmítSize
+++;
+
+60 if–
+foundedFªeSegmítSize
+ =
+size
+ )
+
+61  
+i
+-
+size
++1;
+
+63 
+foundedFªeSegmítSize
+=0;
+
+65  
+NO_SUITABLE_SEGMENT
+;
+
+66 
+	}
+}
+
+69 
+	$SëBlocksSegmítFªe
+(
+fú°Id
+, 
+cou¡
+){
+
+70  
+i
+=0; i<
+cou¡
+; ++i )
+
+71 
+	`SëBlockSèãFªe
+–
+fú°Id
++
+i
+ );
+
+72 
+	}
+}
+
+74 
+	$SëBlocksSegmítBusy
+(
+fú°Id
+, 
+cou¡
+){
+
+75  
+i
+=0; i<
+cou¡
+; ++i )
+
+76 
+	`SëBlockSèãBusy
+–
+fú°Id
++
+i
+ );
+
+77 
+	}
+}
+
+80 
+ölöe
+ * 
+	$TabÀIndexToPoöãr
+(
+ödex
+){
+
+81  (*)
+AVAILABLE_MEMORY_BASE
+ + 
+ödex
+*
+BLOCK_SIZE
+;
+
+82 
+	}
+}
+
+84 
+ölöe
+ 
+	$PoöãrToTabÀIndex
+–*
+poöãr
+ ){
+
+85 
+uöt32
+ 
+poöãrOff£t
+ = (uöt32)
+poöãr
+ - 
+AVAILABLE_MEMORY_BASE
+;
+
+86 if–
+poöãrOff£t
+ % 
+BLOCK_SIZE
+ != 0 )
+
+87  
+NO_SUITABLE_BLOCK
+;
+
+88 
+èbÀIndex
+ = 
+poöãrOff£t
+/
+BLOCK_SIZE
+;
+
+89 if–
+èbÀIndex
+ >
+AVAILABLE_MEMORY_SIZE
+ )
+
+90  
+NO_SUITABLE_BLOCK
+;
+
+91  
+èbÀIndex
+;
+
+92 
+	}
+}
+
+94 
+boﬁ
+ 
+	$IsBlockFªe
+–
+id
+ ){
+
+95  
+MEMORY_TABLE_BASE
+[
+id
+/8]&(1<<(id%8));
+
+96 
+	}
+}
+
+98 
+	$SëBlockSèãFªe
+–
+id
+){
+
+99 
+MEMORY_TABLE_BASE
+[
+id
+/8] |= (1<<(id%8));
+
+100 
+	}
+}
+
+102 
+	$SëBlockSèãBusy
+–
+id
+ ){
+
+103 
+MEMORY_TABLE_BASE
+[
+id
+/8] &= !(1<<(id%8));
+
+104 
 	}
 }
 
@@ -6252,7 +5472,7 @@ p‹t
 	)
 
 5 
-InôMem‹yTabÀ
+InôMem‹y
 ();
 
 6 * 
@@ -6572,7 +5792,7 @@ uöt8
 (){
 
 10 
-	`InôMem‹yTabÀ
+	`InôMem‹y
 ();
 
 11 
@@ -10104,14 +9324,13 @@ __loˇÀ_t
 .
 1
 /usr/include
-29
-490
+28
+468
 bin/0.c
 common/ata.c
 common/fs/fat32.c
 common/fs/fat32_lowLevel.c
 common/fs/fat32_lowLevel.h
-common/fs/fat32_old.c
 common/fs/fs.c
 common/io.c
 common/memory.c

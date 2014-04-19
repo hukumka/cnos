@@ -11,7 +11,7 @@ char buffer[512];
 uint8 FS_Type[4];
 uint8 FS_VolumeIdSector[4];
 
-void LoadPartitions(){
+void InitFilesystemManager(){
 	ATAPIO_Read(0,1,master,buffer);
 	for(int i=0;i<4;++i){
 		FS_Type[i] = buffer[ PARTITION_BASE + i*PARTITION_SIZE + PR_TYPE_OFFSET ];
@@ -28,3 +28,6 @@ uint32 SelectDisk( uint8 id ){
 	}
 }
 
+/*struct{
+	int (*fopen)(FILE *f
+}*/

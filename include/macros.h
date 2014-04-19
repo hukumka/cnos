@@ -30,3 +30,18 @@ static inline void outw(uint16 port, uint16 value){
 static inline void outl(uint16 port, uint32 value){
 	asm volatile( "outl %0, %1" : : "a"(value), "Nd"(port) );
 }
+
+// PM
+static inline void longcall(uint16 cs, uint32 eip){
+	struct __attribute__ (( __packed__ )){
+		uint8 command;
+		uint32 neweip;
+		uint16 newcs;
+		uint8 ret;
+	} longcall_data;
+	longcall_data.command = 0x9a;
+	longcall_data.neweip = eip;
+	longcall_data.newcs = cs;
+	longcall_data.ret=0xc3;
+	asm( "call *%0" :: "r"(&longcall_data) );
+}

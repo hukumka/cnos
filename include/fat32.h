@@ -3,6 +3,10 @@
 
 #define PATH_INVALID 1
 
+#define FILE_SEEK_FROMSTART 0
+#define FILE_SEEK_FROMEND 1
+#define FILE_SEEK_OFFSET 2
+
 struct Fat32_DirMember{
 	char filename[11];
 	union{
@@ -34,13 +38,13 @@ typedef struct{
 	uint8 recordId;
 } FAT32_FILE;
 
-
 bool Fat32_GetDirNextMember( struct Fat32_DirMember * rezult );
 void Fat32_SelectDirectory( uint32 cluster );
 void Fat32_NameToShort( const char *name, char * rezult);
 bool Fat32_SearchMember( uint32,const char *name, struct Fat32_DirMember *rezult );
 bool Fat32_Init( uint32 );
-bool Fat32_open( uint32, const char *,FAT32_FILE *);
+bool Fat32_open( const char *,FAT32_FILE *);
+void Fat32_Seek( FAT32_FILE *f, uint8 SeekType, int32 move);
 
 uint32 Fat32_Read( FAT32_FILE *f, void *data, uint32 size);
 uint32 Fat32_Write( FAT32_FILE *f, void *data, uint32 size);

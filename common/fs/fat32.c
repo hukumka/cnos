@@ -17,6 +17,7 @@ bool IsClusterIdCorrect( uint32 cl){
 	return cl>2 && cl<0xf000000;
 }
 
+// Выбор текущей деректории ( для функций GetDirNextMember, SearchMemberOne )
 void Fat32_SelectDirectory( uint32 cluster ){
 	if( currentCluster != cluster )
 		reloadFlag = true;
@@ -24,6 +25,7 @@ void Fat32_SelectDirectory( uint32 cluster ){
 	currentCluster = currentDirectory = cluster;
 }
 
+// Получение описующей структуры следующего члена (файла или же дочернего каталога) текущего каталога.
 bool Fat32_GetDirNextMember( struct Fat32_DirMember * rezult ){
 	if( currentDirMember==CurrentParams.SectorsPerCluster*DIRECTORY_RECORDS_PER_SECTOR ){
 		currentCluster = NextCluster( currentCluster );
@@ -57,6 +59,7 @@ bool Fat32_GetDirNextMember( struct Fat32_DirMember * rezult ){
 	return true;
 }
 
+// Преобразование строки к корректному короткому имени.
 void Fat32_NameToShort( const char *name, char * rezult){
 	int i,j;
 	for( i=0; i<8 && name[i]!='.' && name[i]!=0; ++i){
@@ -83,6 +86,7 @@ void Fat32_NameToShort( const char *name, char * rezult){
 	}
 }
 
+// Поиск в текущем каталоге члена с указанным именем ( только просто имя, не смотрит вложенные каталоги )
 bool Fat32_SearchMemberOne( const char *name, struct Fat32_DirMember *rezult ){
 	Fat32_SelectDirectory( currentDirectory );
 	char shortName[11];
@@ -99,6 +103,7 @@ bool Fat32_SearchMemberOne( const char *name, struct Fat32_DirMember *rezult ){
 	return false;
 }
 
+// Поиск файла или каталога по заданному пути
 bool Fat32_SearchMember( uint32 baseDir,const char *path, struct Fat32_DirMember *rezult ){
 	int i=0,j=0;
 	char filename[256];
@@ -124,11 +129,15 @@ bool Fat32_SearchMember( uint32 baseDir,const char *path, struct Fat32_DirMember
 	return Fat32_SearchMemberOne( filename, rezult );
 }
 
-bool Fat32_open( uint32 baseDir, const char *path, FAT32_FILE *f ){
+bool Fat32_open( const char *path, FAT32_FILE *f ){
 	struct Fat32_DirMember mem;
-	if( Fat32_SearchMember( baseDir, path, &mem ) ){
-		if( mem.attrib.directory )
+	if( Fat32_SearchMember( CurrentParams.RootDirCluster, path, &mem ) ){
+		if( mem.attrib.directory ){
 			return false;
+		}
+		for(int i=0; i<11; ++i){
+			f->filename[i] = mem.filename[i];
+		}
 		f->buffer = (uint8*)Allocate( CurrentParams.SectorsPerCluster );
 		f->fileSystem = 0xC;
 		f->firstCluster = mem.firstCluster;
@@ -141,6 +150,7 @@ bool Fat32_open( uint32 baseDir, const char *path, FAT32_FILE *f ){
 		return false;
 }
 
+// Перезаписать заголовок файла в директории ( для сохранения корректности таких полей как размер и т. п. )
 void Fat32_RewriteHead( FAT32_FILE *f ){
 	uint32 cluster = f->recordCluster;
 	LoadCluster( cluster, ClusterData );
@@ -148,12 +158,11 @@ void Fat32_RewriteHead( FAT32_FILE *f ){
 	SaveCluster( cluster, ClusterData );
 }
 
-// Чтение из файла
 uint32 Fat32_Read( FAT32_FILE *f, void *data, uint32 size ){
 	uint32 cluster = f->firstCluster;
 	uint32 clusterSize = 512 * CurrentParams.SectorsPerCluster;
 	int i;
-	for( i=clusterSize; i<f->pointer; i+=clusterSize)
+	for( i=CurrentParams.SectorsPerCluster*512-1; i<f->pointer; i+=clusterSize)
 		cluster = NextCluster( cluster );
 	LoadCluster( cluster,  f->buffer );
 	for( i=0; (f->pointer + i < f->fileSize) && (i < size); i++ ){
@@ -167,7 +176,6 @@ uint32 Fat32_Read( FAT32_FILE *f, void *data, uint32 size ){
 	return i;
 }
 
-// Запись в файл
 uint32 Fat32_Write( FAT32_FILE *f, void *data, uint32 size ){
 	uint32 cluster = f->firstCluster;
 	uint32 clusterSize = 512 * CurrentParams.SectorsPerCluster;
@@ -311,6 +319,7 @@ void Fat32_DeleteFile( struct Fat32_DirMember *f){
 	SaveCluster( f->recordCluster, ClusterData);
 }
 
+// Добавление в каталог нового члена
 bool Fat32_DirAddMember( struct Fat32_DirMember* dir, struct Fat32_DirMember* mem){
 	uint32 cluster, nc=dir->firstCluster;
 	int i,j;

@@ -1,3 +1,4 @@
+// HEADERS
 #include <types.h>
 #include <io.h>
 #include <ata.h>
@@ -5,17 +6,17 @@
 #include <pci.h>
 #include <fat32.h>
 #include <fs.h>
+#include <pm.h>
+#include <run.h>
 
 int main(){
-	InitMemoryTable();
-	LoadPartitions();
+	InitMemory();
+	InitFilesystemManager();
 	SelectDisk(0);
 	ClearScreen();
-	FAT32_FILE f;
-	Fat32_open( 2, "bin/0.bin", &f);
-	void *data = Allocate( f.fileSize/512 + 1 );
-	Fat32_Read(&f,data,f.fileSize);
-	void (*prog)() = data;
-	prog();
+
+	InitNewGDT(0x8000);
+
+	CreateProcess( "bin/0.bin" );
 	return 0;
 }

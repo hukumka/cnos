@@ -19,7 +19,10 @@ OBJFILES = \
 	common/fs/fat32.o \
 	common/fs/fat32_lowLevel.o \
 	common/fs/fs.o \
-	common/io.o
+	common/io.o \
+	common/pm.o \
+	common/run.o \
+	common/api.o
 IMAGE = os.img
 
 all: kernel.bin
@@ -35,7 +38,7 @@ kernel.bin: $(OBJFILES)
 .cpp.o:
 	@echo "Компиляция "$<
 	@$(CPP) $(CPPFLAGS) -o $@ -c $< -include cpp.h
-image: kernel.bin
+image: kernel.bin username.txt
 	@echo "Создание образа"
 	@dd if=/dev/zero of=$(IMAGE) bs=512 count=16705 1>/dev/null 2>>errors.log
 	@echo "Создание FAT32 раздела"
@@ -67,7 +70,11 @@ image: kernel.bin
 			setup (hd0)				\n \
 			quit\n" | grub --batch 1>/dev/null
 	@echo "Готово"
-	@-chown hukumka os.img
+	@-chown `cat username.txt` os.img
+	@-chown `cat username.txt` username.txt
+username.txt:
+	users>username.txt
+
 debug:
 	@qemu-system-i386 os.img -s -S&
 	@cgdb -x debugstart.gdb kernel.bin
@@ -75,5 +82,5 @@ debug:
 test:
 	@qemu-system-i386 os.img
 clear:
-	@-rm $(OBJFILES) kernel.bin $(IMAGE) 
+	@-rm $(OBJFILES) kernel.bin $(IMAGE) username.txt
 	@echo>errors.log
