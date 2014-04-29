@@ -9,8 +9,8 @@
 #define AVAILABLE_MEMORY_SIZE (80*MB/BLOCK_SIZE) // Всего 80 мб
 #define TABLE_SIZE (AVAILABLE_MEMORY_SIZE/8)
 
-#define FREE 0
-#define BUSY 1
+#define FREE 1
+#define BUSY 0
 
 #define NO_SUITABLE_BLOCK -1
 #define NO_SUITABLE_SEGMENT -1
@@ -30,7 +30,7 @@ int PointerToTableIndex( void *pointer );
 // Инициализация таблицы памяти
 void InitMemory(){
 	for( int i=0; i<TABLE_SIZE; ++i)
-		MEMORY_TABLE_BASE[i]=FREE;
+		MEMORY_TABLE_BASE[i]=0xff;
 }
 // Выделение памяти
 void* Allocate( int size ){
@@ -58,7 +58,7 @@ bool Free( void *pointer, int size ){
 
 // Поиск свободного отрезка длинны size
 int SearchFreeSegment(int size){
-	int i, foundedFreeSegmentSize;
+	int i, foundedFreeSegmentSize=0;
 	for( i=0; i<AVAILABLE_MEMORY_SIZE; ++i){
 		if( IsBlockFree(i) ){
 			foundedFreeSegmentSize++;
@@ -97,7 +97,7 @@ inline int PointerToTableIndex( void *pointer ){
 }
 //Свободен ли блок id
 bool IsBlockFree( int id ){
-	return MEMORY_TABLE_BASE[id/8]&(1<<(id%8)); 
+	return ( MEMORY_TABLE_BASE[id/8]&(1<<(id%8)) ); 
 }
 // Установка состояния блока id в свободно
 void SetBlockStateFree( int id){

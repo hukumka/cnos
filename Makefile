@@ -20,9 +20,12 @@ OBJFILES = \
 	common/fs/fat32_lowLevel.o \
 	common/fs/fs.o \
 	common/io.o \
-	common/pm.o \
+	common/i386/pm.o \
 	common/run.o \
-	common/api.o
+	common/api.o \
+	common/i386/int.o \
+	common/i386/pic.o \
+	common/i386/keyboard.o
 IMAGE = os.img
 
 all: kernel.bin

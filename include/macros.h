@@ -45,3 +45,14 @@ static inline void longcall(uint16 cs, uint32 eip){
 	longcall_data.ret=0xc3;
 	asm( "call *%0" :: "r"(&longcall_data) );
 }
+
+static inline void io_wait(void){
+	asm volatile ( 
+		"jmp .+2\n"
+		"jmp .+2\n"	
+	);
+}
+// DATA
+
+#define MOVE_ESDATA_TO_LOCAL(global,local)	asm("mov %%es:(%1), %0":"=r"(local):"r"(&global) )
+#define MOVE_LOCAL_TO_ESDATA(local,global) 	asm("mov %0,%%es:(%1)"::"r"(local), "r"(&global) );

@@ -28,6 +28,4 @@ uint32 SelectDisk( uint8 id ){
 	}
 }
 
-/*struct{
-	int (*fopen)(FILE *f
-}*/
+

@@ -1,7 +1,7 @@
 #include <types.h>
 #include <macros.h>
 
-#define VIDEOBUFFER ((uint16*) 0xB8000)
+#define VIDEOBUFFER 0xB8000
 
 #define SCREEN_WIDTH 80
 #define SCREEN_HEIGHT 25
@@ -24,7 +24,7 @@
 #define COLOR_WHITE 0xf
 
 #define COLOR_GET(bc, fc) ( (bc<<4)|fc )
-#define PUTC_POS(ch,cl,x,y) ( VIDEOBUFFER[x+y*SCREEN_WIDTH]=ch|(cl<<8) )
+/*#define PUTC_POS(ch,cl,x,y) ( VIDEOBUFFER[x+y*SCREEN_WIDTH]=ch|(cl<<8) )*/
 
 void ClearScreen();
 void putchar(char a); 

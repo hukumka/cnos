@@ -55,4 +55,5 @@
 void InitNewGDT(uint32 newAddr);
 int NewSuperUserDataDescriptor( uint32 baseAddress, uint32  grSize);
 int NewSuperUserCodeDescriptor( uint32 baseAddress, uint32  grSize);
-void longcall(uint16 cs, uint32 eip);
+
+void InitNewIDT(uint32 newAddr);

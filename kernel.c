@@ -8,15 +8,22 @@
 #include <fs.h>
 #include <pm.h>
 #include <run.h>
+#include <pic.h>
 
 int main(){
 	InitMemory();
 	InitFilesystemManager();
 	SelectDisk(0);
 	ClearScreen();
-
+	printf("qwe\nqweqwe");
 	InitNewGDT(0x8000);
 
-	CreateProcess( "bin/0.bin" );
+	InitNewIDT(0x9000);
+	/*CreateProcess( "bin/0.bin" );*/
+	IRQ_set_mask( 0b11111101 );
+	asm("sti\n");
+	while(true){
+
+	}
 	return 0;
 }

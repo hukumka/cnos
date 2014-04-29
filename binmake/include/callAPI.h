@@ -1,2 +1,2 @@
-#define CODE_SELECTOR 8
-int (*callAPI)(uint16 id)=(int(*)(uint16)) 0x00107ba2;
+#define CALLAPI asm("lcall $0x8, $0x00107bec")
+#define PRINTF_ADDR 0x00107163

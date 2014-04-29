@@ -1,5 +1,5 @@
 #!/bin/bash
-ls ./scripts
-./scripts/mklinkH.sh
+./mklinkH.sh
 
-./scripts/compile.sh bin/0.c
+./compile.sh src/0.c
+cp src/0.bin ../bin/
